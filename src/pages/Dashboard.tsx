@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
@@ -8,7 +7,7 @@ import DashboardStats from "@/components/dashboard/DashboardStats";
 import CourseCard, { CourseCardProps } from "@/components/dashboard/CourseCard";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Bell, Calendar, Trophy, Award, BookOpen } from "lucide-react";
+import { Bell, Calendar, Trophy, Award, BookOpen, Clock } from "lucide-react";
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
