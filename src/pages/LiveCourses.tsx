@@ -229,7 +229,7 @@ const LiveCourses = () => {
                 </p>
                 
                 <div className="flex flex-wrap gap-4 items-center">
-                  <Button variant="cta" size="xl" className="group">
+                  <Button variant="join" size="xl" className="group">
                     <PlayCircle className="h-5 w-5 mr-1 group-hover:animate-pulse" />
                     <span>Unirme ahora</span>
                     <ArrowRight className="ml-1 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all" />

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -435,8 +434,13 @@ const CourseDetail = ({
                   <span>Continuar aprendiendo</span>
                 </Button>
               </div>
+            ) : isLive ? (
+              <Button variant="join" className="w-full group">
+                <PlayCircle className="h-4 w-4 mr-1 group-hover:animate-pulse" />
+                <span>Unirme al curso en vivo</span>
+              </Button>
             ) : (
-              <Button variant="cta" className="w-full group">
+              <Button variant="enroll" className="w-full group">
                 <BookmarkCheck className="h-4 w-4 mr-1 group-hover:animate-pulse" />
                 <span>Inscribirme al curso</span>
               </Button>

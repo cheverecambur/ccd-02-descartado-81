@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { ExternalLink, Clock, Users, Star, PlayCircle } from "lucide-react";
+import { ExternalLink, Clock, Users, Star, PlayCircle, BookmarkPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -92,7 +92,7 @@ const CourseCard = ({
         {/* Overlay with quick action button */}
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
           {isLive ? (
-            <Button variant="cta" size="sm" className="transform scale-90 group-hover:scale-100 transition-transform">
+            <Button variant="join" size="sm" className="transform scale-90 group-hover:scale-100 transition-transform">
               <PlayCircle className="h-4 w-4 mr-1" />
               Unirme ahora
             </Button>
@@ -153,11 +153,11 @@ const CourseCard = ({
           className="group"
         >
           <Button 
-            variant="view" 
+            variant={isLive ? "join" : "view"}
             size="sm" 
             className="flex items-center gap-1 transform group-hover:translate-x-0.5 transition-transform"
           >
-            <span>Ver curso</span>
+            <span>{isLive ? "Unirme" : "Ver curso"}</span>
             <ExternalLink className="h-3.5 w-3.5 group-hover:animate-pulse" />
           </Button>
         </Link>
