@@ -14,10 +14,10 @@ import {
   Star,
   MessageSquare,
   Users,
-  Certificate,
   FileText,
   CheckCircle2,
   Lock,
+  BookmarkCheck,
 } from "lucide-react";
 
 interface CourseModule {
@@ -430,10 +430,16 @@ const CourseDetail = ({
                   <span className="font-medium">{progress}%</span>
                 </div>
                 <Progress value={progress} className="h-1.5" />
-                <Button className="w-full mt-3">Continuar aprendiendo</Button>
+                <Button variant="view" className="w-full mt-3 group">
+                  <Play className="h-4 w-4 mr-1 group-hover:animate-pulse" />
+                  <span>Continuar aprendiendo</span>
+                </Button>
               </div>
             ) : (
-              <Button className="w-full">Inscribirme al curso</Button>
+              <Button variant="cta" className="w-full group">
+                <BookmarkCheck className="h-4 w-4 mr-1 group-hover:animate-pulse" />
+                <span>Inscribirme al curso</span>
+              </Button>
             )}
             
             <Separator />
@@ -454,7 +460,7 @@ const CourseDetail = ({
                   <span>Recursos descargables</span>
                 </li>
                 <li className="flex items-center text-sm">
-                  <Certificate className="h-4 w-4 mr-3 text-gray-500" />
+                  <Award className="h-4 w-4 mr-3 text-gray-500" />
                   <span>Certificado de finalización</span>
                 </li>
                 <li className="flex items-center text-sm">

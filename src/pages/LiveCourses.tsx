@@ -8,7 +8,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Video, Users, Clock, PlayCircle, Filter } from "lucide-react";
+import { 
+  Calendar, 
+  Video, 
+  Users, 
+  Clock, 
+  PlayCircle, 
+  Filter, 
+  Bell, 
+  ArrowRight, 
+  Calendar as CalendarIcon, 
+  ExternalLink
+} from "lucide-react";
 
 const LiveCourses = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -184,42 +195,63 @@ const LiveCourses = () => {
               </div>
             </div>
             
-            {/* Featured Live Session */}
-            <div className="relative rounded-lg overflow-hidden mb-8">
+            {/* Featured Live Session - Redesigned */}
+            <div className="relative rounded-xl overflow-hidden mb-8 shadow-lg border border-white/10">
               <img
                 src="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1600&q=80"
                 alt="Sesión destacada"
-                className="w-full h-[320px] object-cover object-center"
+                className="w-full h-[420px] object-cover object-center transform hover:scale-105 transition-all duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent flex flex-col justify-end p-6">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent flex flex-col justify-end p-8">
                 <div className="flex items-center mb-3">
-                  <span className="bg-red-500 text-white px-3 py-1 rounded-md text-sm font-medium flex items-center">
-                    <span className="animate-pulse relative flex h-2 w-2 mr-2">
+                  <span className="bg-red-600 text-white px-4 py-1.5 rounded-full text-sm font-medium flex items-center">
+                    <span className="animate-pulse relative flex h-3 w-3 mr-2">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
                     </span>
                     EN VIVO AHORA
                   </span>
-                  <span className="ml-3 text-white/80 text-sm flex items-center">
-                    <Users className="h-4 w-4 mr-1" /> 128 asistentes
+                  <span className="ml-4 text-white/90 text-sm flex items-center">
+                    <Users className="h-4 w-4 mr-1.5" /> 
+                    <span className="font-medium">128 asistentes</span>
+                  </span>
+                  <span className="ml-4 text-white/90 text-sm flex items-center">
+                    <Clock className="h-4 w-4 mr-1.5" />
+                    <span className="font-medium">1h 45m restantes</span>
                   </span>
                 </div>
                 
-                <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 leading-tight">
                   Webinar: Innovaciones en Perforación y Voladura
                 </h2>
-                <p className="text-white/80 mb-4 max-w-2xl">
+                <p className="text-white/90 mb-6 max-w-3xl text-base md:text-lg">
                   Únete a nuestro experto Ing. Carlos Morales para conocer las últimas tecnologías y técnicas en perforación y voladura para operaciones mineras más eficientes y seguras.
                 </p>
                 
-                <div className="flex flex-wrap gap-3">
-                  <Button className="bg-red-600 hover:bg-red-700 gap-2">
-                    <PlayCircle className="h-5 w-5" />
+                <div className="flex flex-wrap gap-4 items-center">
+                  <Button variant="cta" size="xl" className="group">
+                    <PlayCircle className="h-5 w-5 mr-1 group-hover:animate-pulse" />
                     <span>Unirme ahora</span>
+                    <ArrowRight className="ml-1 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all" />
                   </Button>
-                  <Button variant="outline" className="bg-white/10 hover:bg-white/20 border-white text-white">
-                    Añadir a calendario
+                  <Button variant="outline" size="xl" className="bg-white/10 hover:bg-white/20 border-white/20 text-white hover:text-white">
+                    <CalendarIcon className="h-5 w-5" />
+                    <span>Añadir a calendario</span>
                   </Button>
+                  <div className="ml-auto hidden md:flex items-center text-white/80 text-sm">
+                    <span className="mr-2">Compartir:</span>
+                    <div className="flex space-x-2">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-white/10 hover:bg-white/20 text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-2.719 0-4.924 2.205-4.924 4.924 0 .386.044.762.127 1.122-4.092-.205-7.72-2.166-10.149-5.145-.423.727-.666 1.573-.666 2.475 0 1.71.87 3.213 2.188 4.096-.807-.026-1.566-.247-2.229-.616v.061c0 2.386 1.693 4.375 3.946 4.828-.413.111-.849.171-1.296.171-.314 0-.615-.03-.916-.086.631 1.953 2.445 3.377 4.604 3.417-1.68 1.319-3.809 2.105-6.102 2.105-.39 0-.779-.023-1.17-.067 2.189 1.394 4.768 2.209 7.557 2.209 9.054 0 14-7.496 14-13.986 0-.21 0-.42-.015-.63.961-.689 1.8-1.56 2.46-2.548z"></path></svg>
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-white/10 hover:bg-white/20 text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path></svg>
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full bg-white/10 hover:bg-white/20 text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path></svg>
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -326,8 +358,9 @@ const LiveCourses = () => {
                             <span>{session.viewers} visualizaciones</span>
                           </div>
                           
-                          <Button variant="ghost" size="sm" className="text-primary">
-                            Ver grabación
+                          <Button variant="view" size="sm" className="flex items-center gap-1.5">
+                            <span>Ver grabación</span>
+                            <ExternalLink className="h-3.5 w-3.5" />
                           </Button>
                         </div>
                       </div>

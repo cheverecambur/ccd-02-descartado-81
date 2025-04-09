@@ -1,9 +1,10 @@
 
 import { Link } from "react-router-dom";
-import { ExternalLink, Clock, Users, Star } from "lucide-react";
+import { ExternalLink, Clock, Users, Star, PlayCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 
 export interface CourseCardProps {
   id: string;
@@ -52,14 +53,15 @@ const CourseCard = ({
 
   return (
     <Card className={cn(
-      "overflow-hidden transition-all duration-300 hover-card-effect h-full flex flex-col",
-      featured && "border-primary/30 dark:border-primary/40"
+      "overflow-hidden transition-all duration-300 hover-card-effect h-full flex flex-col group",
+      featured ? "border-primary/30 dark:border-primary/40 shadow-md" : "",
+      isLive ? "ring-1 ring-red-500" : ""
     )}>
-      <div className="relative">
+      <div className="relative overflow-hidden">
         <img
           src={image}
           alt={title}
-          className="w-full h-48 object-cover object-center"
+          className="w-full h-48 object-cover object-center transform group-hover:scale-105 transition-all duration-500"
         />
         {isLive && (
           <div className="absolute top-3 right-3 bg-red-500 text-white px-2 py-1 rounded-md text-xs font-medium flex items-center">
@@ -85,6 +87,21 @@ const CourseCard = ({
           <span className={`badge-level badge-level-${level}`}>
             {levelLabel[level]}
           </span>
+        </div>
+        
+        {/* Overlay with quick action button */}
+        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+          {isLive ? (
+            <Button variant="cta" size="sm" className="transform scale-90 group-hover:scale-100 transition-transform">
+              <PlayCircle className="h-4 w-4 mr-1" />
+              Unirme ahora
+            </Button>
+          ) : (
+            <Button variant="view" size="sm" className="transform scale-90 group-hover:scale-100 transition-transform">
+              <PlayCircle className="h-4 w-4 mr-1" />
+              Vista previa
+            </Button>
+          )}
         </div>
       </div>
       
@@ -133,10 +150,16 @@ const CourseCard = ({
         
         <Link
           to={`/course/${id}`}
-          className="text-primary hover:text-primary/80 font-medium flex items-center text-sm"
+          className="group"
         >
-          <span>Ver curso</span>
-          <ExternalLink className="h-3 w-3 ml-1" />
+          <Button 
+            variant="view" 
+            size="sm" 
+            className="flex items-center gap-1 transform group-hover:translate-x-0.5 transition-transform"
+          >
+            <span>Ver curso</span>
+            <ExternalLink className="h-3.5 w-3.5 group-hover:animate-pulse" />
+          </Button>
         </Link>
       </CardFooter>
     </Card>
