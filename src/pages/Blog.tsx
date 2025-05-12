@@ -16,7 +16,7 @@ const Blog = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const { searchQuery, setSearchQuery, searchResults, handleSearch } = useSearch();
+  const { searchQuery, setSearchQuery, searchResults, isSearching, handleSearch } = useSearch();
   const { toast } = useToast();
 
   const postsPerPage = 6;
@@ -96,7 +96,8 @@ const Blog = () => {
                           // Limpiar resultados de búsqueda al cambiar categoría
                           if (searchResults.length > 0) {
                             setSearchQuery("");
-                            setSearchResults([]);
+                            // No more setSearchResults, we'll use handleSearch with empty query
+                            handleSearch(new Event('submit') as any);
                           }
                         }}
                         className="data-[state=active]:bg-mining-100 dark:data-[state=active]:bg-mining-900/30 data-[state=active]:text-mining-700 dark:data-[state=active]:text-mining-400"
@@ -120,7 +121,8 @@ const Blog = () => {
                             size="sm"
                             onClick={() => {
                               setSearchQuery("");
-                              setSearchResults([]);
+                              // No more setSearchResults, we'll use handleSearch with empty query
+                              handleSearch(new Event('submit') as any);
                               toast({
                                 title: "Búsqueda reiniciada",
                                 description: "Mostrando todos los artículos nuevamente",
