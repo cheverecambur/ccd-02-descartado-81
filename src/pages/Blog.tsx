@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,7 @@ import Footer from "@/components/layout/Footer";
 import Sidebar from "@/components/layout/Sidebar";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BookOpen, Calendar, ArrowRight, User, MessageSquare, Clock } from "lucide-react";
+import { BookOpen, Calendar, ArrowRight, User, MessageSquare, Clock, Search } from "lucide-react";
 
 const Blog = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
