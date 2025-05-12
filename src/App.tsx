@@ -19,8 +19,6 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <TooltipProvider>
-          <Toaster />
-          <Sonner />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/dashboard" element={<Dashboard />} />
@@ -28,6 +26,10 @@ const App = () => {
             <Route path="/live-courses" element={<LiveCourses />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:id" element={<BlogPost />} />
+            <Route path="/blog/category/:category" element={<Blog />} />
+            <Route path="/blog/tag/:tag" element={<Blog />} />
+            <Route path="/blog/featured" element={<Blog />} />
+            <Route path="/blog/recent" element={<Blog />} />
             {/* Future routes to add here:
               - /course/:id
               - /engineering
@@ -36,11 +38,11 @@ const App = () => {
               - /settings
               - /profile
               - /certifications
-              - /blog/category/:category
-              - /blog/tag/:tag
             */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <Toaster />
+          <Sonner />
         </TooltipProvider>
       </BrowserRouter>
     </QueryClientProvider>
