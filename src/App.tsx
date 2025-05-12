@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Courses from "./pages/Courses";
 import LiveCourses from "./pages/LiveCourses";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +25,8 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/live-courses" element={<LiveCourses />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:id" element={<BlogPost />} />
           {/* Future routes to add here:
             - /course/:id
             - /engineering
@@ -31,6 +35,8 @@ const App = () => (
             - /settings
             - /profile
             - /certifications
+            - /blog/category/:category
+            - /blog/tag/:tag
           */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -9,6 +9,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
 
 interface NavbarProps {
   toggleSidebar: () => void;
@@ -54,6 +63,116 @@ const Navbar = ({ toggleSidebar }: NavbarProps) => {
               <span className="text-mining-700 dark:text-mining-300 font-bold text-xl">Edu</span>
               <span className="text-engineering-700 dark:text-engineering-300 font-bold text-xl">Mining</span>
             </Link>
+            
+            {/* Main Navigation */}
+            <div className="hidden lg:ml-6 lg:flex lg:items-center">
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <Link to="/courses">
+                      <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                        Cursos
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                  
+                  <NavigationMenuItem>
+                    <Link to="/live-courses">
+                      <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                        Cursos en Vivo
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger>Especialidades</NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                        <li className="row-span-3">
+                          <Link to="/engineering" className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-engineering-500/50 to-engineering-700 p-6 no-underline outline-none focus:shadow-md">
+                            <div className="mt-4 mb-2 text-lg font-medium text-white">
+                              Ingeniería
+                            </div>
+                            <p className="text-sm leading-tight text-white/90">
+                              Programas de formación en ingeniería civil, mecánica, 
+                              eléctrica y de sistemas para el sector minero.
+                            </p>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/mining" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Minería</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Especialización en técnicas de extracción y procesamiento.
+                            </p>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/management" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Gestión</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Administración de proyectos y operaciones mineras.
+                            </p>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/certifications" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Certificaciones</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Programas con reconocimiento internacional.
+                            </p>
+                          </Link>
+                        </li>
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                  
+                  {/* Blog Section */}
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger>Blog</NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                        <li className="row-span-3">
+                          <Link to="/blog" className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-mining-500/50 to-mining-700 p-6 no-underline outline-none focus:shadow-md">
+                            <div className="mt-4 mb-2 text-lg font-medium text-white">
+                              Blog EduMining
+                            </div>
+                            <p className="text-sm leading-tight text-white/90">
+                              Descubre artículos, guías técnicas, investigaciones
+                              y noticias sobre la industria minera y de ingeniería.
+                            </p>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/blog/category/tendencias" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Tendencias del Sector</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Últimas innovaciones y desarrollos en la industria.
+                            </p>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/blog/category/mejores-practicas" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Mejores Prácticas</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Guías técnicas y metodologías recomendadas.
+                            </p>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/blog/category/investigacion" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div className="text-sm font-medium leading-none">Investigación y Desarrollo</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                              Avances científicos y tecnológicos en minería.
+                            </p>
+                          </Link>
+                        </li>
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+            </div>
           </div>
           
           <div className="hidden md:flex flex-1 items-center justify-center px-2 lg:px-0">

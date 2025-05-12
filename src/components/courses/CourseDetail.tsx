@@ -1,22 +1,33 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import {
   BookOpen,
+  CheckCircle,
   Clock,
-  Download,
-  Calendar,
-  Play,
-  Award,
-  Star,
-  MessageSquare,
   Users,
+  Calendar,
+  Star,
+  PlayCircle,
   FileText,
-  CheckCircle2,
-  Lock,
   BookmarkCheck,
+  Monitor,
+  Award,
+  MessageSquare,
+  PenTool,
+  Folder,
+  Lock,
+  Check,
 } from "lucide-react";
 
 interface CourseModule {
