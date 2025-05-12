@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
 import {
   BookOpen,
   CheckCircle,
@@ -28,6 +28,8 @@ import {
   Folder,
   Lock,
   Check,
+  Play,
+  Download,
 } from "lucide-react";
 
 interface CourseModule {
@@ -250,7 +252,7 @@ const CourseDetail = ({
                                   {lesson.duration}
                                 </span>
                                 {lesson.completed ? (
-                                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                                  <CheckCircle className="h-4 w-4 text-green-500" />
                                 ) : lesson.locked ? (
                                   <Lock className="h-4 w-4 text-gray-400" />
                                 ) : (
@@ -275,19 +277,19 @@ const CourseDetail = ({
                 <h4 className="font-bold mt-6 mb-2">Lo que aprenderás</h4>
                 <ul className="space-y-2">
                   <li className="flex items-start">
-                    <CheckCircle2 className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
                     <span>Comprender los principios fundamentales de la ingeniería de minas.</span>
                   </li>
                   <li className="flex items-start">
-                    <CheckCircle2 className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
                     <span>Aplicar técnicas avanzadas de extracción minera.</span>
                   </li>
                   <li className="flex items-start">
-                    <CheckCircle2 className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
                     <span>Gestionar proyectos mineros de forma eficiente y segura.</span>
                   </li>
                   <li className="flex items-start">
-                    <CheckCircle2 className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
                     <span>Implementar protocolos de seguridad conforme a regulaciones internacionales.</span>
                   </li>
                 </ul>
