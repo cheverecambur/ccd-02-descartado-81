@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent } from "@/components/ui/card";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Sidebar from "@/components/layout/Sidebar";
-import { Card, CardContent } from "@/components/ui/card";
 import { 
   BookOpen, Calendar, ArrowRight, User, MessageSquare, Clock, 
   Share2, BookmarkPlus, ThumbsUp, Facebook, Twitter, Linkedin, 
@@ -228,6 +228,42 @@ const BlogPostPage = () => {
                       dangerouslySetInnerHTML={{ __html: post.content || post.excerpt }}
                     ></div>
                     
+                    {/* Related Courses Section */}
+                    {post.relatedCourses && post.relatedCourses.length > 0 && (
+                      <div className="mt-10 bg-mining-50 dark:bg-mining-900/20 rounded-xl p-6">
+                        <h3 className="text-xl font-bold mb-4 text-mining-700 dark:text-mining-300">Cursos Relacionados con este Tema</h3>
+                        <p className="text-mining-600 dark:text-mining-400 mb-6">
+                          Profundiza tus conocimientos con estos cursos especializados que complementan perfectamente el contenido de este artículo.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {post.relatedCourses.map((course) => (
+                            <Link key={course.id} to={`/courses/${course.id}`}>
+                              <div className="flex gap-4 bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm hover:shadow-md transition-all">
+                                <div className="w-20 h-20 flex-shrink-0">
+                                  <img src={course.image} alt={course.title} className="w-full h-full object-cover rounded" />
+                                </div>
+                                <div className="flex flex-col justify-center">
+                                  <h4 className="font-medium text-mining-700 dark:text-mining-300 line-clamp-2">{course.title}</h4>
+                                  <div className="mt-2">
+                                    <span className="text-xs px-2 py-1 bg-mining-100 dark:bg-mining-900/50 text-mining-700 dark:text-mining-300 rounded-full">
+                                      Ver detalles
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                        <div className="flex justify-center mt-6">
+                          <Button className="bg-mining-600 hover:bg-mining-700" asChild>
+                            <Link to="/courses">
+                              Ver todos los cursos
+                            </Link>
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                    
                     <div className="mt-10">
                       {post.tags && (
                         <div className="flex flex-wrap gap-2 mb-8">
@@ -313,6 +349,9 @@ const BlogPostPage = () => {
                             </Avatar>
                             <div>
                               <h4 className="text-lg font-medium">{post.author.name}</h4>
+                              {post.author.position && (
+                                <p className="text-sm text-mining-600 dark:text-mining-400 mb-1">{post.author.position}</p>
+                              )}
                               <p className="text-gray-600 dark:text-gray-400 my-2">{post.author.bio}</p>
                               <Button variant="outline" size="sm" asChild>
                                 <Link to={post.author.linkedin || "#"} target="_blank">Ver perfil</Link>
@@ -340,9 +379,38 @@ const BlogPostPage = () => {
               <div className="max-w-3xl mx-auto text-center">
                 <h2 className="text-2xl font-bold mb-4">Amplía tus conocimientos en minería sostenible</h2>
                 <p className="mb-6">
-                  Explora nuestros cursos especializados en tecnologías de extracción sostenible y 
-                  mejores prácticas ambientales para la industria minera.
+                  EduMining ofrece cursos especializados en tecnologías de extracción sostenible y 
+                  mejores prácticas ambientales para impulsar tu carrera en la industria minera.
                 </p>
+                <div className="grid md:grid-cols-3 gap-6 mb-8">
+                  <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
+                    <div className="flex justify-center mb-3">
+                      <div className="bg-white/20 rounded-full p-2">
+                        <CheckCircle className="h-6 w-6 text-white" />
+                      </div>
+                    </div>
+                    <h3 className="font-medium mb-2">Instructores Expertos</h3>
+                    <p className="text-sm text-white/80">Aprende de profesionales con amplia experiencia en el sector</p>
+                  </div>
+                  <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
+                    <div className="flex justify-center mb-3">
+                      <div className="bg-white/20 rounded-full p-2">
+                        <CheckCircle className="h-6 w-6 text-white" />
+                      </div>
+                    </div>
+                    <h3 className="font-medium mb-2">Certificaciones Reconocidas</h3>
+                    <p className="text-sm text-white/80">Obtén certificados valorados por las principales empresas mineras</p>
+                  </div>
+                  <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
+                    <div className="flex justify-center mb-3">
+                      <div className="bg-white/20 rounded-full p-2">
+                        <CheckCircle className="h-6 w-6 text-white" />
+                      </div>
+                    </div>
+                    <h3 className="font-medium mb-2">Contenido Actualizado</h3>
+                    <p className="text-sm text-white/80">Material educativo basado en las últimas tendencias e innovaciones</p>
+                  </div>
+                </div>
                 <div className="flex flex-wrap justify-center gap-4">
                   <Button size="lg" className="bg-white text-mining-700 hover:bg-gray-100" asChild>
                     <Link to="/courses">Explorar cursos</Link>
