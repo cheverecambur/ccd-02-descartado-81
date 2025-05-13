@@ -1,4 +1,3 @@
-
 import { BlogPost, CategoryInfo, TagInfo } from "@/types/blog";
 
 // Categories available
@@ -6,7 +5,8 @@ export const categories: CategoryInfo[] = [
   { id: "all", name: "Todos los artículos", count: 18 },
   { id: "tendencias", name: "Tendencias del Sector", count: 6 },
   { id: "mejores-practicas", name: "Mejores Prácticas", count: 8 },
-  { id: "investigacion", name: "Investigación y Desarrollo", count: 4 }
+  { id: "investigacion", name: "Investigación y Desarrollo", count: 4 },
+  { id: "tecnologia", name: "Tecnología BIM", count: 3 }
 ];
 
 // Popular tags for the sidebar
@@ -18,11 +18,232 @@ export const popularTags: TagInfo[] = [
   { name: "Medio Ambiente", count: 10 },
   { name: "Automatización", count: 9 },
   { name: "Perforación", count: 7 },
-  { name: "Big Data", count: 6 }
+  { name: "Big Data", count: 6 },
+  { name: "BIM", count: 5 },
+  { name: "Valorización", count: 4 }
 ];
 
 // Featured posts
 export const featuredPosts: BlogPost[] = [
+  {
+    id: "bim-valorizacion-obras",
+    title: "Modelado BIM y Valorización de Obras: Transformando la Industria de la Construcción",
+    excerpt: "Descubre cómo la metodología BIM está revolucionando la valorización de obras públicas y privadas con mayor precisión, transparencia y eficiencia en la gestión de proyectos.",
+    content: `
+      <div class="mb-6">
+        <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1400&q=80" alt="Modelado BIM para valorización de obras" class="w-full h-auto rounded-lg mb-4" />
+        <p class="text-sm text-gray-600 dark:text-gray-400">Profesionales utilizando tecnología BIM para valorización de proyectos de infraestructura</p>
+      </div>
+      
+      <h2 class="text-2xl font-bold mb-4">La Revolución BIM en la Valorización de Obras</h2>
+      
+      <p class="mb-4">El Building Information Modeling (BIM) está transformando radicalmente la manera en que se diseñan, construyen y valorizan las obras tanto públicas como privadas. Esta metodología, que va mucho más allá de un simple software de diseño 3D, se ha convertido en un conjunto integrado de procesos que permite a todas las partes interesadas colaborar de manera efectiva a lo largo del ciclo de vida completo de un proyecto.</p>
+      
+      <p class="mb-4">En este artículo, exploraremos cómo la implementación de BIM está revolucionando específicamente la valorización de obras, optimizando costos, aumentando la precisión y transformando la gestión financiera de proyectos de construcción e infraestructura.</p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+        <div>
+          <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=800&q=80" alt="Profesionales BIM colaborando" class="w-full h-64 object-cover rounded-lg" />
+        </div>
+        <div>
+          <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=800&q=80" alt="Modelado BIM de infraestructura" class="w-full h-64 object-cover rounded-lg" />
+        </div>
+      </div>
+      
+      <h3 class="text-xl font-bold mt-6 mb-3">1. Integración Total: BIM y Valorización</h3>
+      
+      <p class="mb-4">La valorización de obras tradicionalmente ha sido un proceso laborioso, propenso a errores y frecuentemente desconectado del diseño y la planificación. Con BIM, esta desconexión desaparece, ya que el modelo tridimensional inteligente contiene toda la información necesaria para realizar valorizaciones precisas en tiempo real:</p>
+      
+      <ul class="list-disc pl-6 mb-4">
+        <li class="mb-2"><strong>Cuantificación automática:</strong> El software BIM puede extraer automáticamente cantidades exactas de materiales, eliminando el tedioso proceso manual de medición y reduciendo significativamente los errores de cálculo.</li>
+        <li class="mb-2"><strong>Vinculación con bases de datos de costos:</strong> Los modelos BIM pueden vincularse directamente con bases de datos de precios actualizados, permitiendo generar presupuestos precisos y actualizados.</li>
+        <li class="mb-2"><strong>Análisis de escenarios:</strong> La capacidad de simular diferentes opciones constructivas permite evaluar rápidamente su impacto económico, facilitando la toma de decisiones informadas.</li>
+        <li class="mb-2"><strong>Valorización por fases:</strong> BIM permite segmentar la valorización según las distintas etapas del proyecto, facilitando el control financiero a lo largo del tiempo.</li>
+      </ul>
+      
+      <blockquote class="border-l-4 border-mining-500 pl-4 italic my-6">
+        "La implementación de BIM en nuestros proyectos de infraestructura pública ha reducido las desviaciones presupuestarias en un 28% y ha aumentado la transparencia en los procesos de valorización, beneficiando tanto a la administración como a los contribuyentes." - Ing. Roberto Sánchez, Director de Proyectos, Ministerio de Obras Públicas
+      </blockquote>
+      
+      <h3 class="text-xl font-bold mt-6 mb-3">2. Detección Temprana de Inconsistencias y Conflictos</h3>
+      
+      <p class="mb-4">Una de las principales ventajas del BIM en la valorización es la detección temprana de interferencias y conflictos entre diferentes sistemas constructivos (estructurales, MEP, arquitectónicos, etc.). Esto tiene un impacto directo en la valorización, ya que:</p>
+      
+      <ul class="list-disc pl-6 mb-4">
+        <li class="mb-2">Reduce drásticamente los costos por modificaciones durante la construcción</li>
+        <li class="mb-2">Minimiza los tiempos de espera y los retrasos por conflictos no detectados</li>
+        <li class="mb-2">Optimiza la secuencia constructiva, mejorando la eficiencia y reduciendo costos indirectos</li>
+        <li class="mb-2">Permite una planificación más precisa de los recursos necesarios en cada fase</li>
+      </ul>
+      
+      <div class="bg-mining-50 dark:bg-mining-900/20 p-6 rounded-lg my-8">
+        <h4 class="text-lg font-bold mb-3 text-mining-700 dark:text-mining-300">Beneficios Cuantificables de BIM en Valorización</h4>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          <div>
+            <div class="text-3xl font-bold text-mining-600 dark:text-mining-400">32%</div>
+            <p class="text-sm">Reducción de modificaciones en obra</p>
+          </div>
+          <div>
+            <div class="text-3xl font-bold text-mining-600 dark:text-mining-400">45%</div>
+            <p class="text-sm">Mayor precisión en presupuestos</p>
+          </div>
+          <div>
+            <div class="text-3xl font-bold text-mining-600 dark:text-mining-400">28%</div>
+            <p class="text-sm">Ahorro en costos por coordinación</p>
+          </div>
+          <div>
+            <div class="text-3xl font-bold text-mining-600 dark:text-mining-400">40%</div>
+            <p class="text-sm">Reducción en errores de medición</p>
+          </div>
+        </div>
+      </div>
+      
+      <h3 class="text-xl font-bold mt-6 mb-3">3. Valorización 5D: La Dimensión Económica de BIM</h3>
+      
+      <p class="mb-4">El BIM 5D integra la dimensión del costo al modelo tridimensional y a la programación temporal (4D). Esta capacidad permite:</p>
+      
+      <ul class="list-disc pl-6 mb-4">
+        <li class="mb-2"><strong>Visualización del flujo de caja:</strong> Los stakeholders pueden visualizar cómo se distribuirán los costos a lo largo del tiempo</li>
+        <li class="mb-2"><strong>Análisis de valor ganado (EVM):</strong> La integración del modelo con el cronograma y los costos facilita la implementación de técnicas avanzadas de control de proyectos</li>
+        <li class="mb-2"><strong>Trazabilidad de cambios:</strong> Cualquier modificación en el diseño actualiza automáticamente las cantidades y costos asociados</li>
+        <li class="mb-2"><strong>Informes personalizados:</strong> Generación de reportes específicos para diferentes interesados (cliente, contratista, fiscalización, etc.)</li>
+      </ul>
+      
+      <p class="mb-4">Esta integración multidimensional proporciona una visión completa del proyecto desde la perspectiva económica, facilitando la toma de decisiones informadas y el control financiero efectivo.</p>
+      
+      <div class="mb-6 mt-8">
+        <img src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1400&q=80" alt="Proceso BIM para valorización" class="w-full h-auto rounded-lg mb-4" />
+        <p class="text-sm text-gray-600 dark:text-gray-400">Proceso de integración BIM 5D para valorización de obras de infraestructura civil</p>
+      </div>
+      
+      <h2 class="text-2xl font-bold mt-8 mb-4">Aplicación Práctica: BIM en Valorizaciones Públicas y Privadas</h2>
+      
+      <h3 class="text-xl font-bold mt-6 mb-3">Sector Público: Transparencia y Control</h3>
+      
+      <p class="mb-4">En el ámbito de la obra pública, la metodología BIM está revolucionando la manera en que se gestionan los recursos públicos:</p>
+      
+      <ul class="list-disc pl-6 mb-4">
+        <li class="mb-2"><strong>Licitaciones más transparentes:</strong> Los modelos BIM permiten a los oferentes tener información más precisa y detallada</li>
+        <li class="mb-2"><strong>Reducción de adicionales:</strong> La detección temprana de conflictos minimiza los sobrecostos durante la ejecución</li>
+        <li class="mb-2"><strong>Fiscalización mejorada:</strong> Las entidades fiscalizadoras pueden realizar un control más efectivo del avance y los costos</li>
+        <li class="mb-2"><strong>Mantenimiento optimizado:</strong> El modelo BIM facilita la planificación y valorización de las tareas de mantenimiento durante todo el ciclo de vida de la infraestructura</li>
+      </ul>
+      
+      <p class="mb-4">Países como Reino Unido, Singapur, Chile y España ya han implementado mandatos BIM para obras públicas, logrando ahorros significativos y mayor transparencia en el uso de los recursos del estado.</p>
+      
+      <h3 class="text-xl font-bold mt-6 mb-3">Sector Privado: Optimización y Rentabilidad</h3>
+      
+      <p class="mb-4">En el sector privado, BIM está demostrando ser una herramienta fundamental para optimizar la relación costo-beneficio de los proyectos:</p>
+      
+      <ul class="list-disc pl-6 mb-4">
+        <li class="mb-2"><strong>Análisis de inversión:</strong> Permite evaluar rápidamente diferentes alternativas constructivas y su impacto en el retorno de la inversión</li>
+        <li class="mb-2"><strong>Gestión de activos:</strong> Facilita la valorización no solo de la construcción sino de todo el ciclo de vida del edificio</li>
+        <li class="mb-2"><strong>Coordinación con subcontratistas:</strong> Mejora la precisión en las contrataciones, reduciendo disputas y sobrecostos</li>
+        <li class="mb-2"><strong>Certificaciones y sostenibilidad:</strong> Integra los costos asociados a certificaciones ambientales y estrategias sostenibles</li>
+      </ul>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-8 text-center">
+        <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+          <h4 class="font-semibold text-lg mb-2">Fase de Diseño</h4>
+          <div class="h-40 flex items-center justify-center">
+            <img src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&w=400&q=80" alt="Fase de diseño" class="max-h-full rounded" />
+          </div>
+          <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">Estimaciones preliminares más precisas y análisis de alternativas de diseño</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+          <h4 class="font-semibold text-lg mb-2">Fase de Construcción</h4>
+          <div class="h-40 flex items-center justify-center">
+            <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=400&q=80" alt="Fase de construcción" class="max-h-full rounded" />
+          </div>
+          <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">Control preciso de avance, certificaciones y modificaciones en tiempo real</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+          <h4 class="font-semibold text-lg mb-2">Fase de Operación</h4>
+          <div class="h-40 flex items-center justify-center">
+            <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=400&q=80" alt="Fase de operación" class="max-h-full rounded" />
+          </div>
+          <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">Gestión de activos, planificación de mantenimiento y análisis de costos operativos</p>
+        </div>
+      </div>
+      
+      <h2 class="text-2xl font-bold mt-8 mb-4">Desafíos en la Implementación</h2>
+      
+      <p class="mb-4">A pesar de sus numerosos beneficios, la implementación de BIM para valorización de obras enfrenta algunos desafíos importantes:</p>
+      
+      <h3 class="text-xl font-bold mt-6 mb-3">1. Curva de Aprendizaje y Capacitación</h3>
+      
+      <p class="mb-4">La adopción de BIM requiere una inversión significativa en capacitación y formación del personal. Los profesionales deben familiarizarse no solo con el software sino con nuevos flujos de trabajo y metodologías colaborativas.</p>
+      
+      <h3 class="text-xl font-bold mt-6 mb-3">2. Estandarización de Procesos</h3>
+      
+      <p class="mb-4">Para aprovechar al máximo las capacidades de BIM en valorización, es fundamental establecer estándares claros para la creación, clasificación y organización de la información en los modelos.</p>
+      
+      <h3 class="text-xl font-bold mt-6 mb-3">3. Interoperabilidad entre Sistemas</h3>
+      
+      <p class="mb-4">La integración efectiva entre el software BIM y los sistemas de gestión financiera, ERP y bases de datos de costos sigue siendo un desafío en muchas implementaciones.</p>
+      
+      <h3 class="text-xl font-bold mt-6 mb-3">4. Marco Contractual y Legal</h3>
+      
+      <p class="mb-4">Los contratos tradicionales no siempre se adaptan bien a los flujos de trabajo BIM, lo que puede generar incertidumbres legales respecto a la propiedad de los modelos, responsabilidades y valorizaciones basadas en BIM.</p>
+      
+      <blockquote class="border-l-4 border-mining-500 pl-4 italic my-6">
+        "El éxito en la implementación de BIM para valorización no depende principalmente de la tecnología sino de la capacidad de la organización para adaptar sus procesos y cultura a un enfoque más colaborativo y transparente." - Dra. Carmen Valverde, Especialista en Implementación BIM
+      </blockquote>
+      
+      <h2 class="text-2xl font-bold mt-8 mb-4">El Futuro: Valorización Automatizada e Inteligencia Artificial</h2>
+      
+      <p class="mb-4">El horizonte de la valorización BIM incluye tecnologías emergentes que prometen llevar la precisión y eficiencia a un nuevo nivel:</p>
+      
+      <ul class="list-disc pl-6 mb-4">
+        <li class="mb-2"><strong>Inteligencia artificial:</strong> Algoritmos capaces de predecir costos basados en proyectos similares y detectar anomalías en presupuestos</li>
+        <li class="mb-2"><strong>Blockchain:</strong> Para garantizar la trazabilidad e inmutabilidad de las valorizaciones realizadas</li>
+        <li class="mb-2"><strong>Gemelos digitales:</strong> Modelos BIM constantemente actualizados que reflejan el estado real de la construcción para valorizar con precisión absoluta</li>
+        <li class="mb-2"><strong>Realidad aumentada:</strong> Para visualizar en campo el avance planificado vs. real y su impacto en la valorización</li>
+      </ul>
+      
+      <p class="mb-4">Estas tecnologías no solo optimizarán la valorización sino que transformarán completamente la manera en que se conciben, diseñan y ejecutan los proyectos de construcción e infraestructura.</p>
+      
+      <h2 class="text-2xl font-bold mt-8 mb-4">Conclusión: BIM como Pilar de la Valorización Moderna</h2>
+      
+      <p class="mb-4">La integración de BIM en los procesos de valorización representa mucho más que una mejora incremental: es una transformación radical que está redefiniendo cómo se gestionan económicamente los proyectos de construcción.</p>
+      
+      <p class="mb-4">Las organizaciones que adopten estas metodologías no solo mejorarán la precisión de sus presupuestos y el control de sus costos, sino que obtendrán una ventaja competitiva significativa en un sector cada vez más digitalizado y exigente.</p>
+      
+      <p class="mb-4">La combinación de modelado tridimensional inteligente con datos de costos y programación temporal está creando un nuevo paradigma donde la transparencia, la precisión y la colaboración son los pilares fundamentales de una valorización exitosa.</p>
+      
+      <div class="bg-mining-50 dark:bg-mining-900/20 p-4 rounded-lg mt-8">
+        <h4 class="font-bold text-mining-700 dark:text-mining-300">Potencia tu carrera con formación especializada</h4>
+        <p class="text-mining-600 dark:text-mining-400 mb-3">Nuestros cursos de Modelado BIM y Valorización de Obras te proporcionarán las herramientas y conocimientos necesarios para destacar en esta área de creciente demanda profesional.</p>
+        <p class="text-mining-600 dark:text-mining-400">Con instructores expertos del sector y casos prácticos reales, estarás preparado para implementar estas metodologías avanzadas en tu práctica profesional.</p>
+      </div>
+    `,
+    category: "tecnologia",
+    image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80",
+    author: {
+      name: "Alejandro Vázquez",
+      avatar: "https://randomuser.me/api/portraits/men/54.jpg",
+      bio: "Ingeniero Civil con maestría en Gestión BIM. Especialista en implementación de metodologías BIM para valorización de proyectos de infraestructura. Consultor internacional con más de 15 años de experiencia en América Latina y España.",
+      position: "Director de Innovación BIM",
+      publications: 28,
+      linkedin: "https://linkedin.com/in/alejandrovazquez"
+    },
+    date: "13 May, 2025",
+    readTime: "12 min",
+    comments: 0,
+    tags: ["BIM", "Valorización", "Infraestructura", "Construcción", "Innovación", "Tecnología"],
+    relatedCourses: [
+      {
+        id: "course-bim-1",
+        title: "Modelado BIM Avanzado para Proyectos de Infraestructura",
+        image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        id: "course-bim-2",
+        title: "Valorización de Obras con Metodología BIM 5D",
+        image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=800&q=80"
+      }
+    ]
+  },
   {
     id: "1",
     title: "Innovaciones en Técnicas de Extracción Sostenible",
@@ -169,296 +390,4 @@ export const featuredPosts: BlogPost[] = [
       
       <ul class="list-disc pl-6 mb-4">
         <li class="mb-2">Programas de reporte de incidentes sin consecuencias punitivas</li>
-        <li class="mb-2">Reuniones diarias de seguridad antes de cada turno</li>
-        <li class="mb-2">Participación de los trabajadores en la elaboración de protocolos</li>
-        <li class="mb-2">Reconocimiento a quienes identifican y reportan riesgos</li>
-      </ul>
-      
-      <p class="mb-4">Las empresas líderes en seguridad han comprendido que los trabajadores de primera línea son quienes mejor conocen los riesgos cotidianos, y su participación activa en la gestión de seguridad es invaluable.</p>
-      
-      <h3 class="text-xl font-bold mt-6 mb-3">El Camino Hacia el Cero Daño</h3>
-      
-      <p class="mb-4">La visión de "Cero Daño" se está convirtiendo en realidad en muchas operaciones mineras gracias a la combinación de tecnología avanzada, capacitación efectiva y una cultura organizacional adecuada.</p>
-      
-      <p class="mb-4">Las estadísticas globales muestran que las minas que han implementado sistemas integrales de gestión de seguridad han reducido sus tasas de accidentes en más de un 85% en los últimos cinco años, demostrando que la minería subterránea puede ser una actividad segura cuando se aplican las mejores prácticas disponibles.</p>
-      
-      <div class="bg-mining-50 dark:bg-mining-900/20 p-4 rounded-lg mt-8">
-        <h4 class="font-bold text-mining-700 dark:text-mining-300">¿Quieres convertirte en especialista en seguridad minera?</h4>
-        <p class="text-mining-600 dark:text-mining-400">Nuestro curso "Seguridad y Prevención de Riesgos en Minería" te proporcionará todas las herramientas necesarias para implementar sistemas de seguridad de vanguardia.</p>
-      </div>
-    `,
-    category: "mejores-practicas",
-    image: "https://images.unsplash.com/photo-1582584001264-d8efbf406ab6?auto=format&fit=crop&w=800&q=80",
-    author: {
-      name: "Carlos Ramírez",
-      avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-      bio: "Especialista en seguridad minera con 20 años de experiencia en operaciones subterráneas. Ex-director de Seguridad en minas de Sudáfrica, Chile y Canadá.",
-      position: "Director de Seguridad Operacional",
-      publications: 18,
-      linkedin: "https://linkedin.com/in/carlosramirez"
-    },
-    date: "8 May, 2025",
-    readTime: "12 min",
-    comments: 18,
-    tags: ["Seguridad", "Minería Subterránea", "Protocolos", "Tecnología", "Prevención"],
-    relatedCourses: [
-      {
-        id: "course-4",
-        title: "Seguridad y Prevención de Riesgos en Minería",
-        image: "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        id: "course-5",
-        title: "Ingeniería de Ventilación en Minería Subterránea",
-        image: "https://images.unsplash.com/photo-1604334204928-e5a248c41090?auto=format&fit=crop&w=800&q=80"
-      }
-    ]
-  },
-  {
-    id: "3",
-    title: "Avances en Materiales para Equipos de Perforación",
-    excerpt: "Investigación sobre nuevos materiales compuestos que extienden la vida útil de los equipos mineros.",
-    content: `
-      <div class="mb-6">
-        <img src="https://images.unsplash.com/photo-1579265413518-c7e41bc8e963?auto=format&fit=crop&w=1400&q=80" alt="Equipos de Perforación" class="w-full h-auto rounded-lg mb-4" />
-        <p class="text-sm text-gray-600 dark:text-gray-400">Equipos de perforación con brocas de nueva generación en operación</p>
-      </div>
-      
-      <h2 class="text-2xl font-bold mb-4">La Revolución de los Materiales en la Industria Minera</h2>
-      
-      <p class="mb-4">La eficiencia y durabilidad de los equipos de perforación son factores críticos en la productividad de cualquier operación minera. Los recientes avances en ciencia de materiales están transformando radicalmente el rendimiento, la vida útil y la sostenibilidad de estos equipos esenciales.</p>
-      
-      <p class="mb-4">En este artículo, exploramos las innovaciones más significativas en materiales para equipos de perforación y cómo están revolucionando la industria extractiva.</p>
-      
-      <h3 class="text-xl font-bold mt-6 mb-3">1. Superaleaciones Resistentes al Desgaste</h3>
-      
-      <p class="mb-4">Las superaleaciones de níquel, cobalto y otros elementos están redefiniendo la durabilidad de las piezas críticas en equipos de perforación. Estas aleaciones presentan:</p>
-      
-      <ul class="list-disc pl-6 mb-4">
-        <li class="mb-2">Resistencia excepcional a la abrasión, incluso en condiciones extremas</li>
-        <li class="mb-2">Estabilidad térmica a temperaturas superiores a 1000°C</li>
-        <li class="mb-2">Resistencia a la corrosión química por fluidos de perforación</li>
-        <li class="mb-2">Mayor vida útil, multiplicando hasta por cinco la duración de los materiales convencionales</li>
-      </ul>
-      
-      <p class="mb-4">Las pruebas de campo realizadas en minas de alta dureza rocosa muestran que las brocas fabricadas con estas superaleaciones mantienen su filo y geometría hasta tres veces más que las convencionales, lo que reduce significativamente los tiempos de inactividad por recambio.</p>
-      
-      <h3 class="text-xl font-bold mt-6 mb-3">2. Compuestos de Matriz Metálica con Nanotecnología</h3>
-      
-      <p class="mb-4">La incorporación de partículas nanométricas en matrices metálicas está creando materiales con propiedades sin precedentes:</p>
-      
-      <ul class="list-disc pl-6 mb-4">
-        <li class="mb-2">Mayor dureza y resistencia al impacto</li>
-        <li class="mb-2">Mejor disipación del calor generado durante la perforación</li>
-        <li class="mb-2">Reducción del peso manteniendo o mejorando la resistencia mecánica</li>
-        <li class="mb-2">Propiedades auto-lubricantes que reducen la fricción</li>
-      </ul>
-      
-      <blockquote class="border-l-4 border-mining-500 pl-4 italic my-6">
-        "Los compuestos de matriz metálica reforzados con nanopartículas de carburo de tungsteno han demostrado un aumento del 40% en la tasa de penetración y una reducción del 35% en el consumo energético durante nuestras pruebas en rocas graníticas de alta dureza." - Dra. Elena Vázquez, Jefa de Investigación de Materiales Mineros, Universidad de Santiago
-      </blockquote>
-      
-      <h3 class="text-xl font-bold mt-6 mb-3">3. Recubrimientos de Diamante CVD</h3>
-      
-      <p class="mb-4">La deposición química de vapor (CVD) está permitiendo la creación de recubrimientos de diamante sintético ultrafino sobre componentes de perforación. Estos recubrimientos ofrecen:</p>
-      
-      <ul class="list-disc pl-6 mb-4">
-        <li class="mb-2">La mayor dureza conocida, cercana a la del diamante natural</li>
-        <li class="mb-2">Coeficiente de fricción extremadamente bajo</li>
-        <li class="mb-2">Resistencia química excepcional</li>
-        <li class="mb-2">Espesor controlado con precisión nanométrica</li>
-      </ul>
-      
-      <p class="mb-4">Aunque su costo es relativamente alto, la prolongación de la vida útil y la mejora en el rendimiento hacen que la inversión sea altamente rentable para operaciones continuas de gran envergadura.</p>
-      
-      <h2 class="text-2xl font-bold mt-8 mb-4">Impacto en la Productividad y Sostenibilidad</h2>
-      
-      <p class="mb-4">La implementación de estos materiales avanzados está generando beneficios cuantificables en múltiples aspectos:</p>
-      
-      <h4 class="text-lg font-bold mt-4 mb-2">Beneficios Económicos</h4>
-      <ul class="list-disc pl-6 mb-4">
-        <li class="mb-2">Reducción del 30-50% en costos de reemplazo de componentes</li>
-        <li class="mb-2">Disminución del tiempo de inactividad por mantenimiento</li>
-        <li class="mb-2">Aumento de la productividad por mayor eficiencia en la perforación</li>
-        <li class="mb-2">Menor consumo de energía por tonelada extraída</li>
-      </ul>
-      
-      <h4 class="text-lg font-bold mt-4 mb-2">Beneficios Ambientales</h4>
-      <ul class="list-disc pl-6 mb-4">
-        <li class="mb-2">Menor generación de residuos por desgaste</li>
-        <li class="mb-2">Reducción de la huella de carbono por mayor eficiencia energética</li>
-        <li class="mb-2">Menor necesidad de fabricación y transporte de repuestos</li>
-      </ul>
-      
-      <p class="mb-4">Los análisis de ciclo de vida muestran que, a pesar del mayor impacto inicial en la fabricación de estos materiales avanzados, el balance neto es positivo cuando se considera la vida útil extendida y la mayor eficiencia operacional.</p>
-      
-      <h3 class="text-xl font-bold mt-6 mb-3">El Futuro: Materiales Inteligentes y Adaptativos</h3>
-      
-      <p class="mb-4">La próxima generación de materiales para perforación minera incluirá capacidades "inteligentes" como:</p>
-      
-      <ul class="list-disc pl-6 mb-4">
-        <li class="mb-2">Aleaciones con memoria de forma que se adaptan a diferentes condiciones del terreno</li>
-        <li class="mb-2">Materiales que pueden "auto-sanarse" de pequeñas fracturas</li>
-        <li class="mb-2">Componentes con sensores integrados que reportan su estado y nivel de desgaste</li>
-      </ul>
-      
-      <p class="mb-4">Estas tecnologías, actualmente en fase de desarrollo, prometen revolucionar aún más la industria en la próxima década, acercándonos a un futuro donde los equipos de perforación sean no solo más durables sino también más inteligentes y adaptables.</p>
-      
-      <div class="bg-mining-50 dark:bg-mining-900/20 p-4 rounded-lg mt-8">
-        <h4 class="font-bold text-mining-700 dark:text-mining-300">Profundiza tus conocimientos</h4>
-        <p class="text-mining-600 dark:text-mining-400">En nuestro curso "Tecnologías de Procesamiento de Minerales" aprenderás sobre los últimos avances en materiales y técnicas para optimizar las operaciones extractivas.</p>
-      </div>
-    `,
-    category: "investigacion",
-    image: "https://images.unsplash.com/photo-1579265413518-c7e41bc8e963?auto=format&fit=crop&w=800&q=80",
-    author: {
-      name: "Laura Méndez",
-      avatar: "https://randomuser.me/api/portraits/women/22.jpg",
-      bio: "Doctora en Ingeniería de Materiales con especialización en aplicaciones mineras. Investigadora principal en el Centro de Innovación Minera y profesora asociada en la Universidad de Antofagasta.",
-      position: "Investigadora Principal",
-      publications: 35,
-      linkedin: "https://linkedin.com/in/lauramendez"
-    },
-    date: "5 May, 2025",
-    readTime: "10 min",
-    comments: 12,
-    tags: ["Investigación", "Materiales", "Perforación", "Innovación", "Ingeniería"],
-    relatedCourses: [
-      {
-        id: "course-3",
-        title: "Tecnologías de Procesamiento de Minerales",
-        image: "https://images.unsplash.com/photo-1579547945413-497e1b99dac0?auto=format&fit=crop&w=800&q=80"
-      },
-      {
-        id: "course-8",
-        title: "Modelamiento Geológico y Estimación de Recursos",
-        image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=800&q=80"
-      }
-    ]
-  }
-];
-
-// Recent posts
-export const recentPosts: BlogPost[] = [
-  {
-    id: "4",
-    title: "El Impacto de la IA en la Planificación de Operaciones Mineras",
-    excerpt: "Cómo la inteligencia artificial está transformando la forma de planificar y optimizar las operaciones en el sector minero.",
-    content: `
-      <div class="mb-6">
-        <img src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=1400&q=80" alt="IA en Minería" class="w-full h-auto rounded-lg mb-4" />
-        <p class="text-sm text-gray-600 dark:text-gray-400">Centro de control con sistemas de IA para operaciones mineras</p>
-      </div>
-      
-      <h2 class="text-2xl font-bold mb-4">La Revolución de la Inteligencia Artificial en la Minería</h2>
-      
-      <p class="mb-4">La minería, una de las industrias más antiguas del mundo, está experimentando una transformación digital sin precedentes. En el centro de esta transformación se encuentra la inteligencia artificial (IA), que está redefiniendo cómo se planifican, ejecutan y optimizan las operaciones mineras.</p>
-      
-      <p class="mb-4">En este artículo, exploraremos cómo la IA está mejorando la eficiencia, seguridad y sostenibilidad de las operaciones mineras a través de la planificación avanzada y la toma de decisiones basada en datos.</p>
-      
-      <h3 class="text-xl font-bold mt-6 mb-3">1. Optimización Predictiva de las Operaciones</h3>
-      
-      <p class="mb-4">Los algoritmos de aprendizaje automático están revolucionando la planificación minera al analizar enormes cantidades de datos históricos y en tiempo real para optimizar cada aspecto de la operación:</p>
-      
-      <ul class="list-disc pl-6 mb-4">
-        <li class="mb-2">Predicción precisa de leyes de mineral basada en datos geológicos limitados</li>
-        <li class="mb-2">Optimización de rutas de transporte para minimizar combustible y desgaste</li>
-        <li class="mb-2">Planificación dinámica de voladuras para maximizar la fragmentación efectiva</li>
-        <li class="mb-2">Programación de mantenimiento predictivo para reducir tiempos de inactividad</li>
-      </ul>
-      
-      <p class="mb-4">Empresas como Rio Tinto y BHP han implementado sistemas de IA que han logrado aumentos de productividad del 10-15% y reducciones de costos operativos del 20% en sus operaciones más avanzadas.</p>
-      
-      <blockquote class="border-l-4 border-mining-500 pl-4 italic my-6">
-        "Nuestro sistema de planificación basado en IA ha transformado nuestra operación. Podemos predecir con una precisión del 95% cuándo un equipo necesitará mantenimiento, lo que ha reducido nuestro tiempo de inactividad no planificado en más de un 30%." - Fernando Osorio, Director de Innovación Digital, Minera Los Pelambres
-      </blockquote>
-      
-      <h3 class="text-xl font-bold mt-6 mb-3">2. Gemelos Digitales y Simulación Avanzada</h3>
-      
-      <p class="mb-4">Los "gemelos digitales" - réplicas virtuales exactas de las operaciones físicas - están permitiendo a las compañías mineras simular y optimizar escenarios complejos antes de implementarlos:</p>
-      
-      <ul class="list-disc pl-6 mb-4">
-        <li class="mb-2">Prueba virtual de diferentes secuencias de extracción para determinar la óptima</li>
-        <li class="mb-2">Simulación de condiciones climáticas extremas y su impacto en las operaciones</li>
-        <li class="mb-2">Evaluación de cambios en la configuración de plantas de procesamiento</li>
-        <li class="mb-2">Entrenamiento de operadores en entornos virtuales precisos</li>
-      </ul>
-      
-      <p class="mb-4">Estos modelos digitales, alimentados con datos en tiempo real de miles de sensores distribuidos en la operación, permiten una toma de decisiones más informada y precisa que nunca antes.</p>
-      
-      <h3 class="text-xl font-bold mt-6 mb-3">3. Planificación Autónoma y Adaptativa</h3>
-      
-      <p class="mb-4">Los sistemas más avanzados están comenzando a implementar capacidades de planificación autónoma, donde los algoritmos no solo analizan datos sino que toman decisiones en tiempo real:</p>
-      
-      <ul class="list-disc pl-6 mb-4">
-        <li class="mb-2">Ajuste automático de parámetros de perforación según la dureza detectada</li>
-        <li class="mb-2">Redistribución dinámica de equipos basada en condiciones cambiantes</li>
-        <li class="mb-2">Optimización continua de mezclas de mineral para cumplir objetivos metalúrgicos</li>
-        <li class="mb-2">Gestión adaptativa de energía para minimizar costos y emisiones</li>
-      </ul>
-      
-      <h2 class="text-2xl font-bold mt-8 mb-4">Casos de Éxito: IA en Acción</h2>
-      
-      <h4 class="text-lg font-bold mt-4 mb-2">Mina Escondida, Chile</h4>
-      <p class="mb-4">La implementación de un sistema integrado de IA para la planificación de la flota y optimización de procesos resultó en:</p>
-      <ul class="list-disc pl-6 mb-4">
-        <li class="mb-2">Aumento del 11.8% en la productividad de la flota de transporte</li>
-        <li class="mb-2">Reducción del 15% en consumo de combustible</li>
-        <li class="mb-2">Disminución del 23% en tiempos de espera</li>
-      </ul>
-      
-      <h4 class="text-lg font-bold mt-4 mb-2">Newmont Goldcorp, Canadá</h4>
-      <p class="mb-4">La implementación de gemelos digitales para la planificación de mina derivó en:</p>
-      <ul class="list-disc pl-6 mb-4">
-        <li class="mb-2">Aumento del 8% en recuperación de oro</li>
-        <li class="mb-2">Reducción del 12% en consumo de energía</li>
-        <li class="mb-2">Optimización de la fragmentación que mejoró la eficiencia del procesamiento</li>
-      </ul>
-      
-      <h3 class="text-xl font-bold mt-6 mb-3">Desafíos y Consideraciones</h3>
-      
-      <p class="mb-4">A pesar de sus enormes beneficios, la implementación de sistemas de IA para planificación minera enfrenta varios desafíos:</p>
-      
-      <ul class="list-disc pl-6 mb-4">
-        <li class="mb-2">Necesidad de inversión significativa en infraestructura digital</li>
-        <li class="mb-2">Requerimiento de personal capacitado en ciencia de datos y minería</li>
-        <li class="mb-2">Integración con sistemas legados y procedimientos establecidos</li>
-        <li class="mb-2">Gestión del cambio cultural en organizaciones tradicionales</li>
-      </ul>
-      
-      <p class="mb-4">Sin embargo, el retorno de inversión suele ser rápido, con la mayoría de las implementaciones recuperando la inversión en menos de dos años.</p>
-      
-      <h3 class="text-xl font-bold mt-6 mb-3">El Futuro: IA Avanzada y Minería Cognitiva</h3>
-      
-      <p class="mb-4">El horizonte de la planificación minera incluye sistemas de IA aún más sofisticados:</p>
-      
-      <ul class="list-disc pl-6 mb-4">
-        <li class="mb-2">Sistemas que aprenden continuamente de sus propios errores y éxitos</li>
-        <li class="mb-2">Integración total de toda la cadena de valor minera en un único sistema inteligente</li>
-        <li class="mb-2">Interfaces de lenguaje natural que permitirán a cualquier empleado interactuar con los sistemas</li>
-        <li class="mb-2">Algoritmos éticos que equilibran objetivos económicos, ambientales y sociales</li>
-      </ul>
-      
-      <p class="mb-4">Las compañías que logren implementar estas tecnologías de manera efectiva no solo mejorarán su rentabilidad sino que transformarán fundamentalmente la forma en que se realiza la minería, haciéndola más precisa, eficiente, segura y sostenible.</p>
-      
-      <div class="bg-mining-50 dark:bg-mining-900/20 p-4 rounded-lg mt-8">
-        <h4 class="font-bold text-mining-700 dark:text-mining-300">Prepárate para el futuro de la minería</h4>
-        <p class="text-mining-600 dark:text-mining-400">Nuestro curso "Ciencia de Datos e IA para la Industria Minera" te capacitará para liderar la transformación digital en tu organización.</p>
-      </div>
-    `,
-    category: "tendencias",
-    image: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=800&q=80",
-    author: {
-      name: "Gabriel Torres",
-      avatar: "https://randomuser.me/api/portraits/men/42.jpg",
-      bio: "Especialista en tecnologías digitales para la industria minera. Consultor internacional con experiencia en implementación de sistemas de IA y análisis de datos en operaciones mineras de gran escala.",
-      position: "Director de Transformación Digital",
-      publications: 14,
-      linkedin: "https://linkedin.com/in/gabrieltorres"
-    },
-    date: "30 Apr, 2025",
-    readTime: "11 min",
-    comments: 9,
-    tags: ["Inteligencia Artificial", "Tecnología", "Optimización", "Automatización", "Big Data"]
-  }
-];
+        <li class="mb-2">Re
