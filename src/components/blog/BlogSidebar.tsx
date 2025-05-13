@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Search } from "lucide-react";
 import { PostCard } from "./PostCard";
-import { popularTags, BlogPost, useNewsletter } from "@/services/blogService";
+import { BlogPost, TagInfo, popularTags, useNewsletter } from "@/services/blogService";
 
 interface BlogSidebarProps {
   relatedPosts?: BlogPost[];
@@ -87,13 +87,13 @@ export const BlogSidebar = ({ relatedPosts, onSearch }: BlogSidebarProps) => {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            {popularTags.map((tag, index) => (
+            {popularTags.map((tag: TagInfo, index) => (
               <Link
                 key={index}
-                to={`/blog/tag/${tag.toLowerCase().replace(" ", "-")}`}
+                to={`/blog/tag/${tag.name.toLowerCase().replace(" ", "-")}`}
                 className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm hover:bg-mining-100 hover:text-mining-700 dark:hover:bg-mining-900/30 dark:hover:text-mining-300 transition-colors"
               >
-                {tag}
+                {tag.name}
               </Link>
             ))}
           </div>

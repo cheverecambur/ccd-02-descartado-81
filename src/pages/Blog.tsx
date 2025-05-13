@@ -16,17 +16,17 @@ const Blog = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const { searchQuery, setSearchQuery, searchResults, isSearching, handleSearch } = useSearch();
+  const { searchTerm, setSearchTerm, searchResults, isSearching, performSearch } = useSearch();
   const { toast } = useToast();
 
   const postsPerPage = 6;
   
-  // Obtener posts para la categoría activa
+  // Get posts for active category
   const filteredPosts = searchResults.length > 0 
     ? searchResults 
     : getPostsByCategory(activeCategory);
   
-  // Calcular la paginación
+  // Calculate pagination
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
@@ -36,15 +36,15 @@ const Blog = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
-  // Resetear la página al cambiar de categoría
+  // Reset page when changing category
   useEffect(() => {
     setCurrentPage(1);
   }, [activeCategory]);
 
-  // Manejar la búsqueda desde la barra lateral
+  // Handle search from sidebar
   const handleSidebarSearch = (query: string) => {
-    setSearchQuery(query);
-    handleSearch(new Event('submit') as any);
+    setSearchTerm(query);
+    performSearch(query);
   };
 
   return (
@@ -93,11 +93,10 @@ const Blog = () => {
                         value={category.id}
                         onClick={() => {
                           setActiveCategory(category.id);
-                          // Limpiar resultados de búsqueda al cambiar categoría
+                          // Clear search results when changing category
                           if (searchResults.length > 0) {
-                            setSearchQuery("");
-                            // No more setSearchResults, we'll use handleSearch with empty query
-                            handleSearch(new Event('submit') as any);
+                            setSearchTerm("");
+                            performSearch("");
                           }
                         }}
                         className="data-[state=active]:bg-mining-100 dark:data-[state=active]:bg-mining-900/30 data-[state=active]:text-mining-700 dark:data-[state=active]:text-mining-400"
@@ -113,16 +112,15 @@ const Blog = () => {
                       <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
                         <div className="flex justify-between items-center">
                           <div>
-                            <h3 className="font-medium">Resultados para: <span className="text-mining-600 dark:text-mining-400">"{searchQuery}"</span></h3>
+                            <h3 className="font-medium">Resultados para: <span className="text-mining-600 dark:text-mining-400">"{searchTerm}"</span></h3>
                             <p className="text-sm text-gray-600 dark:text-gray-400">Se encontraron {searchResults.length} artículos</p>
                           </div>
                           <Button 
                             variant="outline" 
                             size="sm"
                             onClick={() => {
-                              setSearchQuery("");
-                              // No more setSearchResults, we'll use handleSearch with empty query
-                              handleSearch(new Event('submit') as any);
+                              setSearchTerm("");
+                              performSearch("");
                               toast({
                                 title: "Búsqueda reiniciada",
                                 description: "Mostrando todos los artículos nuevamente",

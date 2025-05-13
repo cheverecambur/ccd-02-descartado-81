@@ -16,13 +16,13 @@ const Comment = ({ comment, isReply = false }: CommentProps) => (
   <div className={`${isReply ? "ml-12 mt-4" : "mb-6"}`}>
     <div className="flex gap-4">
       <Avatar className="h-10 w-10">
-        <AvatarImage src={comment.author.avatar} alt={comment.author.name} />
-        <AvatarFallback>{comment.author.name.charAt(0)}</AvatarFallback>
+        <AvatarImage src={comment.authorAvatar} alt={comment.authorName} />
+        <AvatarFallback>{comment.authorName.charAt(0)}</AvatarFallback>
       </Avatar>
       <div className="flex-1">
         <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg">
           <div className="flex justify-between mb-2">
-            <h4 className="font-medium text-sm">{comment.author.name}</h4>
+            <h4 className="font-medium text-sm">{comment.authorName}</h4>
             <span className="text-xs text-gray-500 dark:text-gray-400">{comment.date}</span>
           </div>
           <p className="text-sm text-gray-700 dark:text-gray-300">{comment.content}</p>
@@ -56,12 +56,12 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
     newComment,
     setNewComment,
     loading,
-    fetchComments,
+    loadComments,
     addComment
-  } = useComments(postId);
+  } = useComments(String(postId));
 
   useEffect(() => {
-    fetchComments();
+    loadComments();
   }, [postId]);
 
   return (
