@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -444,4 +445,169 @@ export const recentPosts: BlogPost[] = [
       
       <p class="mb-4">El horizonte de la planificación minera incluye sistemas de IA aún más sofisticados:</p>
       
-      <ul class="list
+      <ul class="list-disc pl-6 mb-4">
+        <li class="mb-2">Sistemas que aprenden continuamente de sus propios errores y éxitos</li>
+        <li class="mb-2">Integración total de toda la cadena de valor minera en un único sistema inteligente</li>
+        <li class="mb-2">Interfaces de lenguaje natural que permitirán a cualquier empleado interactuar con los sistemas</li>
+        <li class="mb-2">Algoritmos éticos que equilibran objetivos económicos, ambientales y sociales</li>
+      </ul>
+      
+      <p class="mb-4">Las compañías que logren implementar estas tecnologías de manera efectiva no solo mejorarán su rentabilidad sino que transformarán fundamentalmente la forma en que se realiza la minería, haciéndola más precisa, eficiente, segura y sostenible.</p>
+      
+      <div class="bg-mining-50 dark:bg-mining-900/20 p-4 rounded-lg mt-8">
+        <h4 class="font-bold text-mining-700 dark:text-mining-300">Prepárate para el futuro de la minería</h4>
+        <p class="text-mining-600 dark:text-mining-400">Nuestro curso "Ciencia de Datos e IA para la Industria Minera" te capacitará para liderar la transformación digital en tu organización.</p>
+      </div>
+    `,
+    category: "tendencias",
+    image: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=800&q=80",
+    author: {
+      name: "Gabriel Torres",
+      avatar: "https://randomuser.me/api/portraits/men/42.jpg",
+      bio: "Especialista en tecnologías digitales para la industria minera. Consultor internacional con experiencia en implementación de sistemas de IA y análisis de datos en operaciones mineras de gran escala.",
+      position: "Director de Transformación Digital",
+      publications: 14,
+      linkedin: "https://linkedin.com/in/gabrieltorres"
+    },
+    date: "30 Apr, 2025",
+    readTime: "11 min",
+    comments: 9,
+    tags: ["Inteligencia Artificial", "Tecnología", "Optimización", "Automatización", "Big Data"]
+  }
+];
+
+// Categorías disponibles
+export const categories = [
+  { id: "all", name: "Todos los artículos", count: 18 },
+  { id: "tendencias", name: "Tendencias del Sector", count: 6 },
+  { id: "mejores-practicas", name: "Mejores Prácticas", count: 8 },
+  { id: "investigacion", name: "Investigación y Desarrollo", count: 4 }
+];
+
+// Función para obtener todos los posts
+export const getAllPosts = (): BlogPost[] => {
+  return [...featuredPosts, ...recentPosts];
+};
+
+// Función para obtener posts por categoría
+export const getPostsByCategory = (categoryId: string): BlogPost[] => {
+  if (categoryId === 'all') {
+    return getAllPosts();
+  }
+  return getAllPosts().filter(post => post.category === categoryId);
+};
+
+// Función para obtener post por ID
+export const getPostById = (id: string): BlogPost | undefined => {
+  return getAllPosts().find(post => post.id === id);
+};
+
+// Función para obtener posts relacionados
+export const getRelatedPosts = (postId: string, limit: number = 3): BlogPost[] => {
+  const post = getPostById(postId);
+  if (!post) return [];
+  
+  // Obtener posts de la misma categoría, excluyendo el post actual
+  return getAllPosts()
+    .filter(p => p.id !== postId && p.category === post.category)
+    .slice(0, limit);
+};
+
+// Hook para manejar interacciones del usuario con los posts (likes, bookmarks)
+export const usePostInteractions = (postId: string) => {
+  const [liked, setLiked] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const { toast } = useToast();
+  
+  // Cargar interacciones del usuario
+  const loadInteractions = () => {
+    // En una app real, aquí se cargarían datos de una API
+    // Por ahora, simulamos con localStorage
+    try {
+      const storedLikes = localStorage.getItem('blog_likes');
+      const storedBookmarks = localStorage.getItem('blog_bookmarks');
+      
+      if (storedLikes) {
+        const likes = JSON.parse(storedLikes);
+        setLiked(likes.includes(postId));
+      }
+      
+      if (storedBookmarks) {
+        const bookmarks = JSON.parse(storedBookmarks);
+        setBookmarked(bookmarks.includes(postId));
+      }
+      
+      // Simular conteo de likes
+      const post = getPostById(postId);
+      setLikeCount(post?.likes || Math.floor(Math.random() * 50));
+    } catch (error) {
+      console.error('Error loading interactions', error);
+    }
+  };
+  
+  // Toggle like
+  const toggleLike = () => {
+    try {
+      let likes: string[] = [];
+      const storedLikes = localStorage.getItem('blog_likes');
+      
+      if (storedLikes) {
+        likes = JSON.parse(storedLikes);
+      }
+      
+      if (liked) {
+        likes = likes.filter(id => id !== postId);
+        setLikeCount(prev => Math.max(0, prev - 1));
+      } else {
+        likes.push(postId);
+        setLikeCount(prev => prev + 1);
+        toast({
+          title: "Post añadido a tus favoritos",
+          description: "Puedes encontrar tus artículos favoritos en tu perfil",
+        });
+      }
+      
+      localStorage.setItem('blog_likes', JSON.stringify(likes));
+      setLiked(!liked);
+    } catch (error) {
+      console.error('Error toggling like', error);
+    }
+  };
+  
+  // Toggle bookmark
+  const toggleBookmark = () => {
+    try {
+      let bookmarks: string[] = [];
+      const storedBookmarks = localStorage.getItem('blog_bookmarks');
+      
+      if (storedBookmarks) {
+        bookmarks = JSON.parse(storedBookmarks);
+      }
+      
+      if (bookmarked) {
+        bookmarks = bookmarks.filter(id => id !== postId);
+      } else {
+        bookmarks.push(postId);
+        toast({
+          title: "Artículo guardado",
+          description: "Puedes encontrar tus artículos guardados en tu perfil",
+        });
+      }
+      
+      localStorage.setItem('blog_bookmarks', JSON.stringify(bookmarks));
+      setBookmarked(!bookmarked);
+    } catch (error) {
+      console.error('Error toggling bookmark', error);
+    }
+  };
+  
+  return {
+    liked,
+    bookmarked,
+    likeCount,
+    loadInteractions,
+    toggleLike,
+    toggleBookmark
+  };
+};

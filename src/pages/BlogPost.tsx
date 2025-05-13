@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -129,7 +128,7 @@ const BlogPostPage = () => {
     };
     
     fetchPostData();
-  }, [id, navigate]);
+  }, [id, navigate, toast, loadInteractions]);
 
   // Cuando no hay post o está cargando
   if (loading) {
