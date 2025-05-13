@@ -34,6 +34,18 @@ export interface BlogPost {
   }[];
 }
 
+// Interface for comments
+export interface Comment {
+  id: string;
+  postId: string;
+  authorName: string;
+  authorAvatar?: string;
+  content: string;
+  date: string;
+  likes: number;
+  replies?: Comment[];
+}
+
 // Posts destacados
 export const featuredPosts: BlogPost[] = [
   {
@@ -484,6 +496,18 @@ export const categories = [
   { id: "investigacion", name: "Investigación y Desarrollo", count: 4 }
 ];
 
+// Popular tags for the sidebar
+export const popularTags = [
+  { name: "Minería Sostenible", count: 12 },
+  { name: "Tecnología", count: 18 },
+  { name: "Seguridad", count: 15 },
+  { name: "Innovación", count: 14 },
+  { name: "Medio Ambiente", count: 10 },
+  { name: "Automatización", count: 9 },
+  { name: "Perforación", count: 7 },
+  { name: "Big Data", count: 6 }
+];
+
 // Función para obtener todos los posts
 export const getAllPosts = (): BlogPost[] => {
   return [...featuredPosts, ...recentPosts];
@@ -609,5 +633,197 @@ export const usePostInteractions = (postId: string) => {
     loadInteractions,
     toggleLike,
     toggleBookmark
+  };
+};
+
+// Mock implementation for newsletter subscription
+export const useNewsletter = () => {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
+  const { toast } = useToast();
+
+  const subscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !email.includes('@')) {
+      toast({
+        title: "Error",
+        description: "Por favor ingresa un correo electrónico válido",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setLoading(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setLoading(false);
+    setSubscribed(true);
+    setEmail("");
+    toast({
+      title: "¡Suscripción exitosa!",
+      description: "Recibirás nuestras actualizaciones en tu correo",
+    });
+  };
+
+  return {
+    email,
+    setEmail,
+    loading,
+    subscribed,
+    subscribe
+  };
+};
+
+// Mock implementation for comments
+export const useComments = (postId: string) => {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [newComment, setNewComment] = useState("");
+  const { toast } = useToast();
+
+  // Load comments
+  const loadComments = async () => {
+    setLoading(true);
+    // Simulate API call with a delay
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    // Mock comments data
+    const mockComments: Comment[] = [
+      {
+        id: "c1",
+        postId,
+        authorName: "Juan Pérez",
+        authorAvatar: "https://randomuser.me/api/portraits/men/1.jpg",
+        content: "Excelente artículo, muy informativo. Me gustaría ver más contenido sobre tecnologías específicas para la minería subterránea.",
+        date: "8 May, 2025",
+        likes: 4,
+        replies: [
+          {
+            id: "r1c1",
+            postId,
+            authorName: "María González",
+            authorAvatar: "https://randomuser.me/api/portraits/women/44.jpg",
+            content: "Gracias por tu comentario, Juan. Estamos preparando un artículo específico sobre ese tema que publicaremos próximamente.",
+            date: "9 May, 2025",
+            likes: 2
+          }
+        ]
+      },
+      {
+        id: "c2",
+        postId,
+        authorName: "Ana Silva",
+        authorAvatar: "https://randomuser.me/api/portraits/women/2.jpg",
+        content: "¿Hay algún curso que profundice en estos temas? Me interesa especialmente la parte de optimización energética.",
+        date: "7 May, 2025",
+        likes: 1
+      }
+    ];
+    
+    setComments(mockComments);
+    setLoading(false);
+  };
+
+  // Add a new comment
+  const addComment = async () => {
+    if (!newComment.trim()) {
+      toast({
+        title: "Error",
+        description: "El comentario no puede estar vacío",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Create new comment
+    const comment: Comment = {
+      id: `c${Date.now()}`,
+      postId,
+      authorName: "Usuario",
+      authorAvatar: "https://randomuser.me/api/portraits/lego/1.jpg",
+      content: newComment,
+      date: "Justo ahora",
+      likes: 0
+    };
+    
+    setComments(prev => [comment, ...prev]);
+    setNewComment("");
+    toast({
+      title: "Comentario publicado",
+      description: "Tu comentario ha sido publicado exitosamente",
+    });
+  };
+
+  // Like a comment
+  const likeComment = (commentId: string) => {
+    setComments(prev => prev.map(c => {
+      if (c.id === commentId) {
+        return {...c, likes: c.likes + 1};
+      }
+      
+      // Check if it's a reply
+      if (c.replies) {
+        return {
+          ...c,
+          replies: c.replies.map(r => 
+            r.id === commentId ? {...r, likes: r.likes + 1} : r
+          )
+        };
+      }
+      
+      return c;
+    }));
+  };
+
+  return {
+    comments,
+    loading,
+    newComment,
+    setNewComment,
+    loadComments,
+    addComment,
+    likeComment
+  };
+};
+
+// Search functionality
+export const useSearch = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState<BlogPost[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+
+  const performSearch = (term: string) => {
+    setSearchTerm(term);
+    
+    if (!term.trim()) {
+      setSearchResults([]);
+      return;
+    }
+    
+    setIsSearching(true);
+    
+    // Simulate search delay
+    setTimeout(() => {
+      const results = getAllPosts().filter(post => 
+        post.title.toLowerCase().includes(term.toLowerCase()) || 
+        post.excerpt.toLowerCase().includes(term.toLowerCase()) ||
+        (post.tags && post.tags.some(tag => tag.toLowerCase().includes(term.toLowerCase())))
+      );
+      
+      setSearchResults(results);
+      setIsSearching(false);
+    }, 300);
+  };
+
+  return {
+    searchTerm,
+    setSearchTerm,
+    searchResults,
+    isSearching,
+    performSearch
   };
 };
