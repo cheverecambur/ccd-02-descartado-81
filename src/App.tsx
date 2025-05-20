@@ -10,6 +10,7 @@ import Courses from "./pages/Courses";
 import LiveCourses from "./pages/LiveCourses";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import BlogAdmin from "./pages/BlogAdmin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => {
             <Route path="/blog/tag/:tag" element={<Blog />} />
             <Route path="/blog/featured" element={<Blog />} />
             <Route path="/blog/recent" element={<Blog />} />
+            <Route path="/blog-admin/*" element={<BlogAdmin />} />
             {/* Future routes to add here:
               - /course/:id
               - /engineering

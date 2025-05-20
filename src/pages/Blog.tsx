@@ -1,16 +1,35 @@
 
-import { useState } from "react";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import Sidebar from "@/components/layout/Sidebar";
-import { BlogSidebar } from "@/components/blog/BlogSidebar";
-import { BlogHeader } from "@/components/blog/BlogHeader";
-import { BlogContent } from "@/components/blog/BlogContent";
+import { useParams, useLocation } from "react-router-dom";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
+import { HeroSection } from "@/components/blog/HeroSection";
+import { CategoryTabs } from "@/components/blog/CategoryTabs";
+import { SearchResultsNotice } from "@/components/blog/SearchResultsNotice";
+import { FeaturedPostsSection } from "@/components/blog/FeaturedPostsSection";
+import { PostsSection } from "@/components/blog/PostsSection";
+import { BlogPagination } from "@/components/blog/BlogPagination";
+import { BlogContent } from "@/components/blog/BlogContent";
+import { LoadingState } from "@/components/blog/LoadingState";
+import BlogAdminLink from "@/components/admin/BlogAdminLink";
 
 const Blog = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { 
+  const params = useParams();
+  const { pathname } = useLocation();
+  
+  // Get category from route param if it exists
+  const categoryParam = params.category || "all";
+  
+  // Get tag from route param if it exists
+  const tagParam = params.tag || "";
+  
+  // Check if we're on specific routes to filter by featured or recent
+  const isFeatured = pathname.includes("/featured");
+  const isRecent = pathname.includes("/recent");
+  
+  // Filter by tag if present, otherwise use the category
+  const initialCategory = tagParam ? "all" : categoryParam;
+  
+  // Use the custom hook for blog posts filtering, search and pagination
+  const {
     activeCategory,
     setActiveCategory,
     currentPage,
@@ -18,54 +37,81 @@ const Blog = () => {
     searchTerm,
     searchResults,
     isSearching,
+    filteredPosts,
     currentPosts,
     totalPages,
     featuredPosts,
     handleSearch,
     clearSearch
-  } = useBlogPosts();
+  } = useBlogPosts(initialCategory);
   
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
+  // Show featured posts only if we're on the featured route
+  const showFeatured = isFeatured || (!isRecent && !tagParam && activeCategory === "all");
+  
+  // If searching, show only search results
+  const showResults = searchTerm.length > 0 && searchResults.length > 0;
+  
+  // Get title based on current filter
+  const getTitle = () => {
+    if (tagParam) return `Artículos con etiqueta: ${tagParam}`;
+    if (isFeatured) return "Artículos Destacados";
+    if (isRecent) return "Artículos Recientes";
+    return "Blog de CCD Capacitación";
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar toggleSidebar={toggleSidebar} />
-      <div className="flex flex-1">
-        <Sidebar isOpen={sidebarOpen} />
-        <main className="flex-1 bg-gray-50 dark:bg-gray-900">
-          {/* Hero Section */}
-          <BlogHeader />
-          
-          {/* Content Section */}
-          <div className="container mx-auto px-4 py-12">
-            <div className="flex flex-col lg:flex-row gap-8">
-              {/* Main Content */}
-              <BlogContent 
-                activeCategory={activeCategory}
-                setActiveCategory={setActiveCategory}
-                searchTerm={searchTerm}
-                searchResults={searchResults}
-                featuredPosts={featuredPosts}
-                currentPosts={currentPosts}
-                totalPages={totalPages}
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-                clearSearch={clearSearch}
-                isSearching={isSearching}
+    <BlogContent>
+      <div className="container mx-auto px-4 py-8">
+        {/* Admin Link */}
+        <div className="flex justify-end mb-6">
+          <BlogAdminLink />
+        </div>
+
+        <HeroSection 
+          title={getTitle()}
+          searchTerm={searchTerm}
+          onSearch={handleSearch}
+        />
+
+        <CategoryTabs 
+          activeCategory={tagParam ? "all" : activeCategory} 
+          onCategoryChange={setActiveCategory} 
+        />
+        
+        {searchTerm && (
+          <SearchResultsNotice 
+            searchTerm={searchTerm} 
+            resultsCount={searchResults.length} 
+            onClear={clearSearch} 
+          />
+        )}
+
+        {showFeatured && !searchTerm && (
+          <FeaturedPostsSection posts={featuredPosts} />
+        )}
+
+        {isSearching ? (
+          <LoadingState />
+        ) : (
+          <>
+            <PostsSection 
+              posts={currentPosts} 
+              isEmpty={filteredPosts.length === 0}
+              searchTerm={searchTerm}
+              categoryId={activeCategory}
+            />
+
+            {filteredPosts.length > 0 && totalPages > 1 && (
+              <BlogPagination 
+                currentPage={currentPage} 
+                totalPages={totalPages} 
+                onPageChange={setCurrentPage} 
               />
-              
-              {/* Sidebar */}
-              <div className="lg:w-1/3">
-                <BlogSidebar onSearch={handleSearch} />
-              </div>
-            </div>
-          </div>
-        </main>
+            )}
+          </>
+        )}
       </div>
-      <Footer />
-    </div>
+    </BlogContent>
   );
 };
 
