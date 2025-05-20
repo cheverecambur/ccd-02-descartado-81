@@ -74,7 +74,14 @@ const CategoriesManager = () => {
 
   const onSubmit = async (values: CategoryFormValues) => {
     try {
-      await updateCategory(values);
+      // Ensure values has all required properties of CategoryInfo
+      const categoryToSave: CategoryInfo = {
+        id: values.id,
+        name: values.name,
+        count: values.count,
+      };
+      
+      await updateCategory(categoryToSave);
       toast({
         title: selectedCategory ? "Categoría actualizada" : "Categoría creada",
         description: `La categoría ha sido ${selectedCategory ? "actualizada" : "creada"} exitosamente.`,
