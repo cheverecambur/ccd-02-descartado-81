@@ -19,13 +19,31 @@ export const useSearch = () => {
     
     setIsSearching(true);
     
-    // Simulate search delay
+    // Simulate search delay for better UX
     setTimeout(() => {
-      const results = getAllPosts().filter(post => 
-        post.title.toLowerCase().includes(term.toLowerCase()) || 
-        post.excerpt.toLowerCase().includes(term.toLowerCase()) ||
-        (post.tags && post.tags.some(tag => tag.toLowerCase().includes(term.toLowerCase())))
-      );
+      const lowerTerm = term.toLowerCase();
+      const results = getAllPosts().filter(post => {
+        // Search in title
+        if (post.title.toLowerCase().includes(lowerTerm)) return true;
+        
+        // Search in excerpt
+        if (post.excerpt.toLowerCase().includes(lowerTerm)) return true;
+        
+        // Search in content if available
+        if (post.content && post.content.toLowerCase().includes(lowerTerm)) return true;
+        
+        // Search in category
+        if (typeof post.category === 'string' && post.category.toLowerCase().includes(lowerTerm)) return true;
+        
+        // Search in tags
+        if (post.tags && post.tags.some(tag => tag.toLowerCase().includes(lowerTerm))) return true;
+        
+        // Search in author name
+        if (typeof post.author === 'object' && post.author.name.toLowerCase().includes(lowerTerm)) return true;
+        if (typeof post.author === 'string' && post.author.toLowerCase().includes(lowerTerm)) return true;
+        
+        return false;
+      });
       
       setSearchResults(results);
       setIsSearching(false);

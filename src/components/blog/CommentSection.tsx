@@ -1,18 +1,19 @@
 
+import { useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ThumbsUp, Reply } from "lucide-react";
+import { ThumbsUp, Reply, Send } from "lucide-react";
 import { useComments, Comment as CommentType } from "@/services/blogService";
-import { useEffect } from "react";
 
 interface CommentProps {
   comment: CommentType;
+  onLike: (commentId: string) => void;
   isReply?: boolean;
 }
 
-const Comment = ({ comment, isReply = false }: CommentProps) => (
+const Comment = ({ comment, onLike, isReply = false }: CommentProps) => (
   <div className={`${isReply ? "ml-12 mt-4" : "mb-6"}`}>
     <div className="flex gap-4">
       <Avatar className="h-10 w-10">
@@ -28,7 +29,10 @@ const Comment = ({ comment, isReply = false }: CommentProps) => (
           <p className="text-sm text-gray-700 dark:text-gray-300">{comment.content}</p>
         </div>
         <div className="flex gap-4 mt-2">
-          <button className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-mining-600 dark:hover:text-mining-400 transition-colors">
+          <button 
+            className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-mining-600 dark:hover:text-mining-400 transition-colors"
+            onClick={() => onLike(comment.id)}
+          >
             <ThumbsUp className="h-3 w-3" />
             <span>Me gusta ({comment.likes})</span>
           </button>
@@ -41,7 +45,7 @@ const Comment = ({ comment, isReply = false }: CommentProps) => (
     </div>
     
     {comment.replies && comment.replies.map(reply => (
-      <Comment key={reply.id} comment={reply} isReply />
+      <Comment key={reply.id} comment={reply} onLike={onLike} isReply />
     ))}
   </div>
 );
@@ -57,12 +61,18 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
     setNewComment,
     loading,
     loadComments,
-    addComment
+    addComment,
+    likeComment
   } = useComments(String(postId));
 
   useEffect(() => {
     loadComments();
-  }, [postId]);
+  }, [postId, loadComments]);
+
+  const handleAddComment = (e: React.FormEvent) => {
+    e.preventDefault();
+    addComment();
+  };
 
   return (
     <div className="mt-10">
@@ -71,17 +81,24 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
       {/* New Comment Form */}
       <Card className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-lg mb-8 border-0 shadow">
         <h4 className="font-medium mb-4">Deja tu comentario</h4>
-        <textarea
-          placeholder="Escribe tu comentario aquí..."
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-mining-500 dark:focus:ring-mining-400 focus:border-transparent h-32 resize-none"
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-        ></textarea>
-        <div className="flex justify-end mt-4">
-          <Button onClick={addComment} disabled={loading}>
-            {loading ? "Publicando..." : "Publicar comentario"}
-          </Button>
-        </div>
+        <form onSubmit={handleAddComment}>
+          <div className="relative">
+            <textarea
+              placeholder="Escribe tu comentario aquí..."
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-mining-500 dark:focus:ring-mining-400 focus:border-transparent h-32 resize-none pr-12"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+            ></textarea>
+            <Button 
+              type="submit"
+              size="icon"
+              className="absolute bottom-2 right-2 bg-mining-600 hover:bg-mining-700"
+              disabled={loading || !newComment.trim()}
+            >
+              <Send className="h-4 w-4" />
+            </Button>
+          </div>
+        </form>
       </Card>
       
       {/* Comments List */}
@@ -94,7 +111,7 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
         <div>
           {comments.map(comment => (
             <div key={comment.id}>
-              <Comment comment={comment} />
+              <Comment comment={comment} onLike={likeComment} />
               {comment !== comments[comments.length - 1] && <Separator className="my-6" />}
             </div>
           ))}
