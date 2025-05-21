@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { BlogPost, CategoryInfo } from "@/types/blog";
 import { getAllPosts, getPostById } from "@/services/posts/blogPostsService";
@@ -74,7 +75,7 @@ export const useBlogAdmin = () => {
     };
 
     fetchStats();
-  }, []);
+  }, [toast]);
 
   const savePost = async (post: BlogPost): Promise<BlogPost> => {
     // This would connect to a real backend API in a production app

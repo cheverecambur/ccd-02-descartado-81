@@ -11,6 +11,7 @@ import { LoadingState } from "@/components/blog/LoadingState";
 import BlogAdminLink from "@/components/admin/BlogAdminLink";
 import { featuredPosts } from "@/services/posts/blogPostsData";
 import { BlogHeader } from "@/components/blog/BlogHeader";
+import { categories } from "@/services/posts/categoriesService";
 
 const Blog = () => {
   const params = useParams();
@@ -50,14 +51,18 @@ const Blog = () => {
     if (tagParam) return `Artículos con etiqueta: ${tagParam}`;
     if (isFeatured) return "Artículos Destacados";
     if (isRecent) return "Artículos Recientes";
+    if (activeCategory !== "all") {
+      const category = categories.find(cat => cat.id === activeCategory);
+      return category ? category.name : "Blog de CCD Capacitación";
+    }
     return "Blog de CCD Capacitación";
   };
 
   // Get first featured post for hero section
   const heroPost = featuredPosts[0];
   
-  // Show featured posts only if we're on the featured route or main page
-  const showFeatured = isFeatured || (!isRecent && !tagParam && activeCategory === "all" && !searchTerm);
+  // Show featured posts only on main page with no filters
+  const showFeatured = !isRecent && !isFeatured && !tagParam && activeCategory === "all" && !searchTerm;
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
@@ -71,7 +76,7 @@ const Blog = () => {
           <BlogAdminLink />
         </div>
 
-        {/* Only show hero section on specific pages */}
+        {/* Hero Section - Only show on main page or featured page */}
         {heroPost && !tagParam && !isRecent && (
           <HeroSection post={heroPost} />
         )}
@@ -80,7 +85,7 @@ const Blog = () => {
           <CategoryTabs 
             activeCategory={tagParam ? "all" : activeCategory}
             setActiveCategory={setActiveCategory}
-            categories={[]}
+            categories={categories}
             clearSearch={clearSearch}
             hasSearchResults={searchTerm.length > 0}
           />
@@ -93,8 +98,8 @@ const Blog = () => {
             />
           )}
 
-          {/* Show featured posts section */}
-          {showFeatured && !isSearching && (
+          {/* Show featured posts section on main page or featured page */}
+          {(showFeatured || isFeatured) && !isSearching && (
             <FeaturedPostsSection posts={featuredPosts} />
           )}
 
