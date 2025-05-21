@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { BlogPost, CategoryInfo } from "@/types/blog";
 import { getAllPosts, getPostById } from "@/services/posts/blogPostsService";
@@ -21,6 +20,7 @@ export const useBlogAdmin = () => {
     recentPosts: []
   });
   const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -175,6 +175,11 @@ export const useBlogAdmin = () => {
           });
         } catch (error) {
           console.error("Error fetching admin stats:", error);
+          toast({
+            title: "Error",
+            description: "No se pudieron cargar las estadísticas del blog",
+            variant: "destructive"
+          });
         } finally {
           setIsLoading(false);
         }
