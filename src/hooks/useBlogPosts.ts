@@ -2,8 +2,9 @@
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useSearch } from "@/services/search/searchService";
-import { getPostsByCategory, featuredPosts } from "@/services/blogService";
 import { BlogPost } from "@/types/blog";
+import { getAllPosts } from "@/services/posts/blogPostsService";
+import { featuredPosts } from "@/services/posts/blogPostsData";
 
 export const useBlogPosts = (initialCategory: string = "all", postsPerPage: number = 6) => {
   const [activeCategory, setActiveCategory] = useState(initialCategory);
@@ -14,7 +15,9 @@ export const useBlogPosts = (initialCategory: string = "all", postsPerPage: numb
   // Get posts for active category
   const filteredPosts = searchResults.length > 0 
     ? searchResults 
-    : getPostsByCategory(activeCategory);
+    : getAllPosts().filter(post => 
+        activeCategory === "all" ? true : post.category === activeCategory
+      );
   
   // Calculate pagination
   const indexOfLastPost = currentPage * postsPerPage;

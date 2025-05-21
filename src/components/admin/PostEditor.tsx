@@ -27,8 +27,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, Save } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   title: z.string().min(5, "El título debe tener al menos 5 caracteres"),
@@ -40,6 +40,9 @@ const formSchema = z.object({
   readTime: z.string(),
   tags: z.string(),
   author: z.string(),
+  authorAvatar: z.string().url("Ingrese una URL válida para la imagen del autor").optional(),
+  authorBio: z.string().optional(),
+  authorPosition: z.string().optional()
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -52,6 +55,7 @@ interface PostEditorProps {
 const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
   const [isLoading, setIsLoading] = useState(!!postId);
   const { savePost } = useBlogAdmin();
+  const { toast } = useToast();
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -64,7 +68,10 @@ const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
       date: new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }),
       readTime: "5 min",
       tags: "",
-      author: "CCD Capacitación"
+      author: "CCD Capacitación",
+      authorAvatar: "https://randomuser.me/api/portraits/lego/1.jpg",
+      authorBio: "",
+      authorPosition: ""
     }
   });
 
@@ -75,6 +82,11 @@ const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
       try {
         const post = getPostById(postId);
         if (post) {
+          const authorName = typeof post.author === "string" ? post.author : post.author.name;
+          const authorAvatar = typeof post.author === "string" ? "" : post.author.avatar;
+          const authorBio = typeof post.author === "string" ? "" : post.author.bio || "";
+          const authorPosition = typeof post.author === "string" ? "" : post.author.position || "";
+          
           form.reset({
             title: post.title,
             excerpt: post.excerpt,
@@ -84,20 +96,38 @@ const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
             date: post.date,
             readTime: post.readTime,
             tags: post.tags ? post.tags.join(", ") : "",
-            author: typeof post.author === "string" ? post.author : post.author.name
+            author: authorName,
+            authorAvatar,
+            authorBio,
+            authorPosition
           });
         }
       } catch (error) {
         console.error("Error loading post data", error);
+        toast({
+          title: "Error al cargar datos",
+          description: "No se pudo cargar la información del artículo",
+          variant: "destructive"
+        });
       } finally {
         setIsLoading(false);
       }
     }
-  }, [postId, form]);
+  }, [postId, form, toast]);
 
   const onSubmit = async (values: FormValues) => {
     setIsLoading(true);
     try {
+      // Create author object
+      const author = values.authorAvatar || values.authorBio || values.authorPosition
+        ? {
+            name: values.author,
+            avatar: values.authorAvatar || "https://randomuser.me/api/portraits/lego/1.jpg",
+            bio: values.authorBio || undefined,
+            position: values.authorPosition || undefined
+          }
+        : values.author;
+
       const postData: BlogPost = {
         id: postId || `post-${Date.now()}`,
         title: values.title,
@@ -105,7 +135,7 @@ const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
         content: values.content,
         category: values.category,
         image: values.image,
-        author: values.author,
+        author: author,
         date: values.date,
         readTime: values.readTime,
         comments: 0,
@@ -113,9 +143,18 @@ const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
       };
       
       await savePost(postData);
+      toast({
+        title: postId ? "Artículo actualizado" : "Artículo creado",
+        description: `El artículo ha sido ${postId ? "actualizado" : "creado"} exitosamente.`
+      });
       onSaveSuccess();
     } catch (error) {
       console.error("Error saving post", error);
+      toast({
+        title: "Error",
+        description: "No se pudo guardar el artículo",
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
     }
@@ -143,7 +182,7 @@ const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
               disabled={isLoading}
             >
               <Save size={16} />
-              Guardar Artículo
+              {isLoading ? "Guardando..." : "Guardar Artículo"}
             </Button>
           </div>
 
@@ -152,7 +191,7 @@ const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
               <TabsList className="mb-6">
                 <TabsTrigger value="basic">Información Básica</TabsTrigger>
                 <TabsTrigger value="content">Contenido</TabsTrigger>
-                <TabsTrigger value="seo">SEO & Metadatos</TabsTrigger>
+                <TabsTrigger value="author">Autor</TabsTrigger>
               </TabsList>
               
               <TabsContent value="basic" className="space-y-6">
@@ -240,21 +279,7 @@ const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <FormField
-                    control={form.control}
-                    name="author"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Autor</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Nombre del autor" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <FormField
                     control={form.control}
                     name="date"
@@ -318,18 +343,83 @@ const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
                         />
                       </FormControl>
                       <FormMessage />
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                        Puedes usar etiquetas HTML para dar formato al contenido.
+                      </p>
                     </FormItem>
                   )}
                 />
               </TabsContent>
               
-              <TabsContent value="seo">
-                <div className="space-y-4 py-4 text-center">
-                  <h3 className="text-lg font-medium">Configuración SEO</h3>
-                  <p className="text-muted-foreground">
-                    La configuración SEO estará disponible próximamente
-                  </p>
-                </div>
+              <TabsContent value="author" className="space-y-6">
+                <FormField
+                  control={form.control}
+                  name="author"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nombre del Autor</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Nombre del autor" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="authorAvatar"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>URL de la Foto del Autor</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="https://example.com/avatar.jpg" 
+                          {...field} 
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="authorPosition"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Cargo del Autor</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Coordinador Académico" 
+                          {...field} 
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="authorBio"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Biografía del Autor</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Breve biografía del autor" 
+                          {...field}
+                          rows={4} 
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </TabsContent>
             </Tabs>
           </Card>
