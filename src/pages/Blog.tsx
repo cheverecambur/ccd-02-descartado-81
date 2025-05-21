@@ -10,6 +10,7 @@ import { BlogPagination } from "@/components/blog/BlogPagination";
 import { LoadingState } from "@/components/blog/LoadingState";
 import BlogAdminLink from "@/components/admin/BlogAdminLink";
 import { featuredPosts } from "@/services/posts/blogPostsData";
+import { BlogHeader } from "@/components/blog/BlogHeader";
 
 const Blog = () => {
   const params = useParams();
@@ -52,18 +53,28 @@ const Blog = () => {
     return "Blog de CCD Capacitación";
   };
 
-  // Get first featured post for hero section or use a default
+  // Get first featured post for hero section
   const heroPost = featuredPosts[0];
+  
+  // Show featured posts only if we're on the featured route or main page
+  const showFeatured = isFeatured || (!isRecent && !tagParam && activeCategory === "all" && !searchTerm);
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
+      {!tagParam && !isFeatured && !isRecent && (
+        <BlogHeader />
+      )}
+      
       <div className="container mx-auto px-4 py-8">
         {/* Admin Link */}
         <div className="flex justify-end mb-6">
           <BlogAdminLink />
         </div>
 
-        {heroPost && <HeroSection post={heroPost} />}
+        {/* Only show hero section on specific pages */}
+        {heroPost && !tagParam && !isRecent && (
+          <HeroSection post={heroPost} />
+        )}
 
         <div className="mt-8">
           <CategoryTabs 
@@ -82,7 +93,8 @@ const Blog = () => {
             />
           )}
 
-          {!isSearching && !searchTerm && isFeatured && (
+          {/* Show featured posts section */}
+          {showFeatured && !isSearching && (
             <FeaturedPostsSection posts={featuredPosts} />
           )}
 
@@ -94,7 +106,7 @@ const Blog = () => {
                 title={getTitle()}
                 posts={currentPosts} 
                 isSearchResults={searchTerm.length > 0}
-                showViewAllLink={!isSearching && !tagParam && activeCategory === "all" && !searchTerm}
+                showViewAllLink={!isSearching && !tagParam && activeCategory === "all" && !searchTerm && !isFeatured}
                 isLoading={false}
               />
 
