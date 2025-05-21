@@ -60,59 +60,58 @@ const Blog = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
-      <BlogContent>
-        <div className="container mx-auto px-4 py-8">
-          {/* Admin Link */}
-          <div className="flex justify-end mb-6">
-            <BlogAdminLink />
-          </div>
-
-          <HeroSection 
-            searchTerm={searchTerm}
-            onSearch={handleSearch}
-          />
-
-          <CategoryTabs 
-            activeCategory={tagParam ? "all" : activeCategory}
-            setActiveCategory={setActiveCategory}
-          />
-          
-          {searchTerm && (
-            <SearchResultsNotice 
-              searchTerm={searchTerm} 
-              resultsCount={searchResults.length} 
-              onClear={clearSearch} 
-            />
-          )}
-
-          {showFeatured && !searchTerm && (
-            <FeaturedPostsSection posts={featuredPosts} />
-          )}
-
-          {isSearching ? (
-            <LoadingState isLoading={isSearching} />
-          ) : (
-            <>
-              <PostsSection 
-                posts={currentPosts} 
-                showEmpty={filteredPosts.length === 0}
-                searchTerm={searchTerm}
-                category={activeCategory}
-              />
-
-              {filteredPosts.length > 0 && totalPages > 1 && (
-                <BlogPagination 
-                  currentPage={currentPage} 
-                  totalPages={totalPages} 
-                  onPageChange={setCurrentPage} 
-                />
-              )}
-            </>
-          )}
+    <BlogContent>
+      <div className="container mx-auto px-4 py-8">
+        {/* Admin Link */}
+        <div className="flex justify-end mb-6">
+          <BlogAdminLink />
         </div>
-      </BlogContent>
-    </div>
+
+        <HeroSection 
+          title={getTitle()}
+          searchTerm={searchTerm}
+          onSearch={handleSearch}
+        />
+
+        <CategoryTabs 
+          activeCategory={tagParam ? "all" : activeCategory} 
+          onCategoryChange={setActiveCategory} 
+        />
+        
+        {searchTerm && (
+          <SearchResultsNotice 
+            searchTerm={searchTerm} 
+            resultsCount={searchResults.length} 
+            onClear={clearSearch} 
+          />
+        )}
+
+        {showFeatured && !searchTerm && (
+          <FeaturedPostsSection posts={featuredPosts} />
+        )}
+
+        {isSearching ? (
+          <LoadingState />
+        ) : (
+          <>
+            <PostsSection 
+              posts={currentPosts} 
+              isEmpty={filteredPosts.length === 0}
+              searchTerm={searchTerm}
+              categoryId={activeCategory}
+            />
+
+            {filteredPosts.length > 0 && totalPages > 1 && (
+              <BlogPagination 
+                currentPage={currentPage} 
+                totalPages={totalPages} 
+                onPageChange={setCurrentPage} 
+              />
+            )}
+          </>
+        )}
+      </div>
+    </BlogContent>
   );
 };
 
