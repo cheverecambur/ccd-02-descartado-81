@@ -1,12 +1,14 @@
 
-import React from "react";
-import { Check, X, MessageSquare, ExternalLink } from "lucide-react";
+import React, { useState } from "react";
+import { MessageSquare } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import CommentItem, { Comment } from "./CommentItem";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const MOCK_COMMENTS = [
+// Mock comments data - in a real app, this would come from an API
+const MOCK_COMMENTS: Comment[] = [
   {
     id: "comment-1",
     postId: "modelador-bim-peru",
@@ -47,8 +49,18 @@ const MOCK_COMMENTS = [
 
 const CommentsManager = () => {
   const { toast } = useToast();
+  const [comments, setComments] = useState<Comment[]>(MOCK_COMMENTS);
+  const [activeTab, setActiveTab] = useState("all");
 
   const handleApproveComment = (commentId: string) => {
+    setComments(prev => 
+      prev.map(comment => 
+        comment.id === commentId 
+          ? { ...comment, status: "approved" } 
+          : comment
+      )
+    );
+    
     toast({
       title: "Comentario aprobado",
       description: "El comentario ha sido aprobado y publicado."
@@ -56,6 +68,14 @@ const CommentsManager = () => {
   };
 
   const handleRejectComment = (commentId: string) => {
+    setComments(prev => 
+      prev.map(comment => 
+        comment.id === commentId 
+          ? { ...comment, status: "rejected" } 
+          : comment
+      )
+    );
+    
     toast({
       title: "Comentario rechazado",
       description: "El comentario ha sido rechazado y no será publicado."
@@ -66,103 +86,150 @@ const CommentsManager = () => {
     window.open(`/blog/${postId}`, '_blank');
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "approved":
-        return <Badge className="bg-green-500">Aprobado</Badge>;
-      case "rejected":
-        return <Badge variant="destructive">Rechazado</Badge>;
-      case "pending":
-      default:
-        return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300 dark:bg-yellow-900/30 dark:text-yellow-500 dark:border-yellow-800">Pendiente</Badge>;
-    }
-  };
+  const filteredComments = activeTab === "all" 
+    ? comments 
+    : comments.filter(comment => comment.status === activeTab);
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">Comentarios</h2>
-        <div className="flex space-x-2">
+        <div className="flex items-center space-x-2">
           <Button variant="outline" size="sm" className="gap-1">
             <MessageSquare size={16} />
-            <span className="hidden sm:inline">Todos</span>
+            <span className="hidden sm:inline">Total</span>
             <span className="bg-primary/10 text-primary ml-1 px-1.5 py-0.5 rounded text-xs">
-              {MOCK_COMMENTS.length}
-            </span>
-          </Button>
-          <Button variant="outline" size="sm" className="gap-1">
-            Pendientes
-            <span className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-500 ml-1 px-1.5 py-0.5 rounded text-xs">
-              {MOCK_COMMENTS.filter(c => c.status === "pending").length}
+              {comments.length}
             </span>
           </Button>
         </div>
       </div>
 
       <Card>
-        <div className="divide-y divide-gray-200 dark:divide-gray-700">
-          {MOCK_COMMENTS.map((comment) => (
-            <div key={comment.id} className="p-4">
-              <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <h3 className="font-medium">{comment.authorName}</h3>
-                    {getStatusBadge(comment.status)}
-                  </div>
-                  
-                  <p className="text-sm mb-3">{comment.content}</p>
-                  
-                  <div className="flex flex-wrap gap-2 items-center text-xs text-gray-500 dark:text-gray-400">
-                    <span>{comment.date}</span>
-                    <span>•</span>
-                    <button
-                      onClick={() => handleViewPost(comment.postId)}
-                      className="flex items-center hover:text-primary"
-                    >
-                      <span className="truncate max-w-[200px] md:max-w-xs">
-                        {comment.postTitle}
-                      </span>
-                      <ExternalLink size={12} className="ml-1" />
-                    </button>
-                  </div>
-                </div>
+        <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="w-full border-b p-0 h-auto">
+            <TabsTrigger 
+              value="all" 
+              className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
+            >
+              Todos ({comments.length})
+            </TabsTrigger>
+            <TabsTrigger 
+              value="pending" 
+              className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
+            >
+              Pendientes ({comments.filter(c => c.status === "pending").length})
+            </TabsTrigger>
+            <TabsTrigger 
+              value="approved" 
+              className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
+            >
+              Aprobados ({comments.filter(c => c.status === "approved").length})
+            </TabsTrigger>
+            <TabsTrigger 
+              value="rejected" 
+              className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-primary"
+            >
+              Rechazados ({comments.filter(c => c.status === "rejected").length})
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="all" className="m-0">
+            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+              {filteredComments.map((comment) => (
+                <CommentItem
+                  key={comment.id}
+                  comment={comment}
+                  onApprove={handleApproveComment}
+                  onReject={handleRejectComment}
+                  onViewPost={handleViewPost}
+                />
+              ))}
 
-                <div className="flex space-x-2 md:self-start">
-                  {comment.status === "pending" && (
-                    <>
-                      <Button 
-                        size="sm"
-                        variant="outline"
-                        className="h-8 w-8 p-0"
-                        onClick={() => handleApproveComment(comment.id)}
-                      >
-                        <Check size={16} className="text-green-600" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="h-8 w-8 p-0"
-                        onClick={() => handleRejectComment(comment.id)}
-                      >
-                        <X size={16} className="text-red-600" />
-                      </Button>
-                    </>
-                  )}
+              {filteredComments.length === 0 && (
+                <div className="p-8 text-center">
+                  <MessageSquare className="mx-auto h-12 w-12 text-gray-400" />
+                  <h3 className="mt-2 text-sm font-semibold">No hay comentarios</h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    No hay comentarios para mostrar en esta sección.
+                  </p>
                 </div>
-              </div>
+              )}
             </div>
-          ))}
+          </TabsContent>
+          
+          <TabsContent value="pending" className="m-0">
+            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+              {filteredComments.map((comment) => (
+                <CommentItem
+                  key={comment.id}
+                  comment={comment}
+                  onApprove={handleApproveComment}
+                  onReject={handleRejectComment}
+                  onViewPost={handleViewPost}
+                />
+              ))}
 
-          {MOCK_COMMENTS.length === 0 && (
-            <div className="p-8 text-center">
-              <MessageSquare className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-semibold">No hay comentarios</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                No hay comentarios para moderar en este momento.
-              </p>
+              {filteredComments.length === 0 && (
+                <div className="p-8 text-center">
+                  <MessageSquare className="mx-auto h-12 w-12 text-gray-400" />
+                  <h3 className="mt-2 text-sm font-semibold">No hay comentarios pendientes</h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    No hay comentarios pendientes de moderación.
+                  </p>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </TabsContent>
+          
+          <TabsContent value="approved" className="m-0">
+            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+              {filteredComments.map((comment) => (
+                <CommentItem
+                  key={comment.id}
+                  comment={comment}
+                  onApprove={handleApproveComment}
+                  onReject={handleRejectComment}
+                  onViewPost={handleViewPost}
+                />
+              ))}
+
+              {filteredComments.length === 0 && (
+                <div className="p-8 text-center">
+                  <MessageSquare className="mx-auto h-12 w-12 text-gray-400" />
+                  <h3 className="mt-2 text-sm font-semibold">No hay comentarios aprobados</h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    No hay comentarios aprobados para mostrar.
+                  </p>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="rejected" className="m-0">
+            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+              {filteredComments.map((comment) => (
+                <CommentItem
+                  key={comment.id}
+                  comment={comment}
+                  onApprove={handleApproveComment}
+                  onReject={handleRejectComment}
+                  onViewPost={handleViewPost}
+                />
+              ))}
+
+              {filteredComments.length === 0 && (
+                <div className="p-8 text-center">
+                  <MessageSquare className="mx-auto h-12 w-12 text-gray-400" />
+                  <h3 className="mt-2 text-sm font-semibold">No hay comentarios rechazados</h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    No hay comentarios rechazados para mostrar.
+                  </p>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
       </Card>
     </div>
   );

@@ -1,9 +1,9 @@
 
 import { useState, useEffect } from "react";
 import { BlogPost, CategoryInfo } from "@/types/blog";
-import { getAllPosts, getPostById, featuredPosts } from "@/services/posts/blogPostsService";
+import { getAllPosts, getPostById } from "@/services/posts/blogPostsService";
 import { categories, popularTags } from "@/services/posts/categoriesService";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface AdminStats {
   totalPosts: number;

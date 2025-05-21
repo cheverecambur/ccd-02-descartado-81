@@ -68,14 +68,14 @@ const Blog = () => {
             <BlogAdminLink />
           </div>
 
-          <HeroSection 
-            searchTerm={searchTerm}
-            onSearch={handleSearch}
-          />
+          <HeroSection />
 
           <CategoryTabs 
             activeCategory={tagParam ? "all" : activeCategory}
             setActiveCategory={setActiveCategory}
+            categories={[]}
+            clearSearch={clearSearch}
+            hasSearchResults={searchTerm.length > 0}
           />
           
           {searchTerm && (
@@ -96,9 +96,8 @@ const Blog = () => {
             <>
               <PostsSection 
                 posts={currentPosts} 
-                showEmpty={filteredPosts.length === 0}
-                searchTerm={searchTerm}
                 category={activeCategory}
+                searchTerm={searchTerm}
               />
 
               {filteredPosts.length > 0 && totalPages > 1 && (
