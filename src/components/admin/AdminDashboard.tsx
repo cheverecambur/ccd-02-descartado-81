@@ -1,10 +1,9 @@
 
 import React from "react";
-import { FileText, MessageSquare, BarChart3, Users } from "lucide-react";
+import { FileText, MessageSquare, Users, BarChart3 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BlogPost } from "@/types/blog";
+import { BlogPost, CategoryInfo } from "@/types/blog";
 import { Skeleton } from "@/components/ui/skeleton";
-import UserStatsSection from "./UserStatsSection";
 
 interface StatsCardProps {
   title: string;
@@ -149,8 +148,6 @@ const AdminDashboard = ({ stats, isLoading }: AdminDashboardProps) => {
           </CardContent>
         </Card>
       </div>
-
-      <UserStatsSection />
     </div>
   );
 };

@@ -10,7 +10,6 @@ import PostsManager from "@/components/admin/PostsManager";
 import PostEditor from "@/components/admin/PostEditor";
 import CategoriesManager from "@/components/admin/CategoriesManager";
 import CommentsManager from "@/components/admin/CommentsManager";
-import AnalyticsSection from "@/components/admin/AnalyticsSection";
 
 const BlogAdmin = () => {
   const { toast } = useToast();
@@ -31,7 +30,7 @@ const BlogAdmin = () => {
     } else if (path === "new-post") {
       setSelectedPostId(null);
       setActiveView("edit-post");
-    } else if (path === "posts" || path === "categories" || path === "comments" || path === "dashboard" || path === "analytics") {
+    } else if (path === "posts" || path === "categories" || path === "comments" || path === "dashboard") {
       setActiveView(path);
     } else if (path === "" || path === "/") {
       setActiveView("dashboard");
@@ -80,8 +79,6 @@ const BlogAdmin = () => {
         return <CategoriesManager />;
       case "comments":
         return <CommentsManager />;
-      case "analytics":
-        return <AnalyticsSection />;
       default:
         return <AdminDashboard stats={stats} isLoading={isLoading} />;
     }
@@ -96,8 +93,7 @@ const BlogAdmin = () => {
           activeView === "posts" ? "Administrar Artículos" :
           activeView === "edit-post" ? (selectedPostId ? "Editar Artículo" : "Crear Artículo") :
           activeView === "categories" ? "Administrar Categorías" :
-          activeView === "comments" ? "Administrar Comentarios" : 
-          activeView === "analytics" ? "Análisis y Estadísticas" : "Administración del Blog"
+          activeView === "comments" ? "Administrar Comentarios" : "Administración del Blog"
         } />
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
           <Routes>
@@ -130,7 +126,6 @@ const BlogAdmin = () => {
             } />
             <Route path="categories" element={<CategoriesManager />} />
             <Route path="comments" element={<CommentsManager />} />
-            <Route path="analytics" element={<AnalyticsSection />} />
             <Route path="*" element={<AdminDashboard stats={stats} isLoading={isLoading} />} />
           </Routes>
         </main>
