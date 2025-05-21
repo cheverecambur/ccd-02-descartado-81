@@ -4,8 +4,11 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { PostCard } from "./PostCard";
-import { BlogPost, TagInfo, popularTags, useNewsletter } from "@/services/blogService";
+import { BlogPost, TagInfo } from "@/types/blog";
+import { popularTags } from "@/services/posts/categoriesService";
+import { useNewsletter } from "@/services/newsletter/newsletterService";
 
 interface BlogSidebarProps {
   relatedPosts?: BlogPost[];
@@ -32,10 +35,10 @@ export const BlogSidebar = ({ relatedPosts, onSearch }: BlogSidebarProps) => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSearch} className="relative">
-            <input
+            <Input
               type="search"
               placeholder="Buscar artículos..."
-              className="w-full pl-4 pr-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-mining-500 dark:focus:ring-mining-400 focus:border-transparent"
+              className="pr-10"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -61,10 +64,9 @@ export const BlogSidebar = ({ relatedPosts, onSearch }: BlogSidebarProps) => {
             Recibe los últimos artículos y noticias sobre ingeniería y minería directamente en tu correo.
           </p>
           <form onSubmit={subscribe} className="space-y-4">
-            <input
+            <Input
               type="email"
               placeholder="Tu correo electrónico"
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-mining-500 dark:focus:ring-mining-400 focus:border-transparent"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -90,7 +92,7 @@ export const BlogSidebar = ({ relatedPosts, onSearch }: BlogSidebarProps) => {
             {popularTags.map((tag: TagInfo, index) => (
               <Link
                 key={index}
-                to={`/blog/tag/${tag.name.toLowerCase().replace(" ", "-")}`}
+                to={`/blog/tag/${tag.name.toLowerCase().replace(/\s+/g, "-")}`}
                 className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm hover:bg-mining-100 hover:text-mining-700 dark:hover:bg-mining-900/30 dark:hover:text-mining-300 transition-colors"
               >
                 {tag.name}

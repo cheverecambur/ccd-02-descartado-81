@@ -12,6 +12,7 @@ import BlogAdminLink from "@/components/admin/BlogAdminLink";
 import { featuredPosts } from "@/services/posts/blogPostsData";
 import { BlogHeader } from "@/components/blog/BlogHeader";
 import { categories } from "@/services/posts/categoriesService";
+import { BlogSidebar } from "@/components/blog/BlogSidebar";
 
 const Blog = () => {
   const params = useParams();
@@ -81,49 +82,59 @@ const Blog = () => {
           <HeroSection post={heroPost} />
         )}
 
-        <div className="mt-8">
-          <CategoryTabs 
-            activeCategory={tagParam ? "all" : activeCategory}
-            setActiveCategory={setActiveCategory}
-            categories={categories}
-            clearSearch={clearSearch}
-            hasSearchResults={searchTerm.length > 0}
-          />
-          
-          {searchTerm && (
-            <SearchResultsNotice 
-              searchTerm={searchTerm} 
-              resultsCount={searchResults.length} 
-              onClear={clearSearch} 
+        <div className="flex flex-col lg:flex-row gap-8 mt-8">
+          <div className="lg:w-2/3">
+            <CategoryTabs 
+              activeCategory={tagParam ? "all" : activeCategory}
+              setActiveCategory={setActiveCategory}
+              categories={categories}
+              clearSearch={clearSearch}
+              hasSearchResults={searchTerm.length > 0}
             />
-          )}
-
-          {/* Show featured posts section on main page or featured page */}
-          {(showFeatured || isFeatured) && !isSearching && (
-            <FeaturedPostsSection posts={featuredPosts} />
-          )}
-
-          {isSearching ? (
-            <LoadingState isLoading={isSearching} />
-          ) : (
-            <>
-              <PostsSection 
-                title={getTitle()}
-                posts={currentPosts} 
-                isSearchResults={searchTerm.length > 0}
-                showViewAllLink={!isSearching && !tagParam && activeCategory === "all" && !searchTerm && !isFeatured}
-                isLoading={false}
+            
+            {searchTerm && (
+              <SearchResultsNotice 
+                searchTerm={searchTerm} 
+                resultsCount={searchResults.length} 
+                onClear={clearSearch} 
               />
+            )}
 
-              {filteredPosts.length > 0 && totalPages > 1 && (
-                <BlogPagination 
-                  currentPage={currentPage} 
-                  totalPages={totalPages} 
-                  onPageChange={setCurrentPage} 
+            {/* Show featured posts section on main page or featured page */}
+            {(showFeatured || isFeatured) && !isSearching && (
+              <FeaturedPostsSection posts={featuredPosts} />
+            )}
+
+            {isSearching ? (
+              <LoadingState isLoading={isSearching} />
+            ) : (
+              <>
+                <PostsSection 
+                  title={getTitle()}
+                  posts={currentPosts} 
+                  isSearchResults={searchTerm.length > 0}
+                  showViewAllLink={!isSearching && !tagParam && activeCategory === "all" && !searchTerm && !isFeatured}
+                  isLoading={false}
                 />
-              )}
-            </>
-          )}
+
+                {filteredPosts.length > 0 && totalPages > 1 && (
+                  <BlogPagination 
+                    currentPage={currentPage} 
+                    totalPages={totalPages} 
+                    onPageChange={setCurrentPage} 
+                  />
+                )}
+              </>
+            )}
+          </div>
+          
+          {/* Blog Sidebar */}
+          <div className="lg:w-1/3 mt-8 lg:mt-0">
+            <BlogSidebar 
+              relatedPosts={filteredPosts.slice(0, 3)} 
+              onSearch={handleSearch} 
+            />
+          </div>
         </div>
       </div>
     </div>
