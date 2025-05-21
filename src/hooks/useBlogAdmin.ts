@@ -21,7 +21,6 @@ export const useBlogAdmin = () => {
     recentPosts: []
   });
   const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
-  const { toast } = useToast();
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -75,7 +74,7 @@ export const useBlogAdmin = () => {
     };
 
     fetchStats();
-  }, [toast]);
+  }, []);
 
   const savePost = async (post: BlogPost): Promise<BlogPost> => {
     // This would connect to a real backend API in a production app
@@ -176,11 +175,6 @@ export const useBlogAdmin = () => {
           });
         } catch (error) {
           console.error("Error fetching admin stats:", error);
-          toast({
-            title: "Error",
-            description: "No se pudieron cargar las estadísticas del blog",
-            variant: "destructive"
-          });
         } finally {
           setIsLoading(false);
         }

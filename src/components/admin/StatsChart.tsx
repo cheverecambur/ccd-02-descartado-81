@@ -6,7 +6,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } fro
 interface StatsChartProps {
   title: string;
   data: any[];
-  dataKey: string | string[];
+  dataKey: string;
   nameKey: string;
   colors?: string[];
 }

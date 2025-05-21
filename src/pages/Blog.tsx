@@ -7,11 +7,9 @@ import { SearchResultsNotice } from "@/components/blog/SearchResultsNotice";
 import { FeaturedPostsSection } from "@/components/blog/FeaturedPostsSection";
 import { PostsSection } from "@/components/blog/PostsSection";
 import { BlogPagination } from "@/components/blog/BlogPagination";
+import { BlogContent } from "@/components/blog/BlogContent";
 import { LoadingState } from "@/components/blog/LoadingState";
 import BlogAdminLink from "@/components/admin/BlogAdminLink";
-import { featuredPosts } from "@/services/posts/blogPostsData";
-import { BlogHeader } from "@/components/blog/BlogHeader";
-import { categories } from "@/services/posts/categoriesService";
 
 const Blog = () => {
   const params = useParams();
@@ -42,50 +40,40 @@ const Blog = () => {
     filteredPosts,
     currentPosts,
     totalPages,
+    featuredPosts,
     handleSearch,
     clearSearch
   } = useBlogPosts(initialCategory);
+  
+  // Show featured posts only if we're on the featured route
+  const showFeatured = isFeatured || (!isRecent && !tagParam && activeCategory === "all");
+  
+  // If searching, show only search results
+  const showResults = searchTerm.length > 0 && searchResults.length > 0;
   
   // Get title based on current filter
   const getTitle = () => {
     if (tagParam) return `Artículos con etiqueta: ${tagParam}`;
     if (isFeatured) return "Artículos Destacados";
     if (isRecent) return "Artículos Recientes";
-    if (activeCategory !== "all") {
-      const category = categories.find(cat => cat.id === activeCategory);
-      return category ? category.name : "Blog de CCD Capacitación";
-    }
     return "Blog de CCD Capacitación";
   };
 
-  // Get first featured post for hero section
-  const heroPost = featuredPosts[0];
-  
-  // Show featured posts only on main page with no filters
-  const showFeatured = !isRecent && !isFeatured && !tagParam && activeCategory === "all" && !searchTerm;
-
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
-      {!tagParam && !isFeatured && !isRecent && (
-        <BlogHeader />
-      )}
-      
-      <div className="container mx-auto px-4 py-8">
-        {/* Admin Link */}
-        <div className="flex justify-end mb-6">
-          <BlogAdminLink />
-        </div>
+      <BlogContent>
+        <div className="container mx-auto px-4 py-8">
+          {/* Admin Link */}
+          <div className="flex justify-end mb-6">
+            <BlogAdminLink />
+          </div>
 
-        {/* Hero Section - Only show on main page or featured page */}
-        {heroPost && !tagParam && !isRecent && (
-          <HeroSection post={heroPost} />
-        )}
+          <HeroSection />
 
-        <div className="mt-8">
           <CategoryTabs 
             activeCategory={tagParam ? "all" : activeCategory}
             setActiveCategory={setActiveCategory}
-            categories={categories}
+            categories={[]}
             clearSearch={clearSearch}
             hasSearchResults={searchTerm.length > 0}
           />
@@ -98,8 +86,7 @@ const Blog = () => {
             />
           )}
 
-          {/* Show featured posts section on main page or featured page */}
-          {(showFeatured || isFeatured) && !isSearching && (
+          {showFeatured && !searchTerm && (
             <FeaturedPostsSection posts={featuredPosts} />
           )}
 
@@ -108,11 +95,9 @@ const Blog = () => {
           ) : (
             <>
               <PostsSection 
-                title={getTitle()}
                 posts={currentPosts} 
-                isSearchResults={searchTerm.length > 0}
-                showViewAllLink={!isSearching && !tagParam && activeCategory === "all" && !searchTerm && !isFeatured}
-                isLoading={false}
+                category={activeCategory}
+                searchTerm={searchTerm}
               />
 
               {filteredPosts.length > 0 && totalPages > 1 && (
@@ -125,7 +110,7 @@ const Blog = () => {
             </>
           )}
         </div>
-      </div>
+      </BlogContent>
     </div>
   );
 };
