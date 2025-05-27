@@ -1,157 +1,286 @@
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import StatsChart from "./StatsChart";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  MessageSquare, 
+  FileText, 
+  Users, 
+  TrendingUp, 
+  ThumbsUp,
+  Clock,
+  CheckCircle,
+  XCircle,
+  BarChart3,
+  Calendar
+} from "lucide-react";
+import { useAnalytics } from "@/hooks/useAnalytics";
+import MetricCard from "./analytics/MetricCard";
+import EngagementChart from "./analytics/EngagementChart";
+import TopItemsList from "./analytics/TopItemsList";
+import StatsChart from "./StatsChart";
 
 const AnalyticsSection = () => {
-  // This would come from a real API in a production app
-  const viewsData = [
-    { month: "Ene", views: 3200, visitors: 1800 },
-    { month: "Feb", views: 4100, visitors: 2200 },
-    { month: "Mar", views: 3800, visitors: 2000 },
-    { month: "Abr", views: 4800, visitors: 2600 },
-    { month: "May", views: 5200, visitors: 2900 },
-    { month: "Jun", views: 5800, visitors: 3200 },
-  ];
+  const { data, loading } = useAnalytics();
 
-  const popularPosts = [
-    { title: "Modelador BIM en Perú", views: 2145, category: "BIM" },
-    { title: "Minería Sostenible", views: 1893, category: "Minería" },
-    { title: "Supervisor SSOMA en Perú", views: 1652, category: "Seguridad" },
-    { title: "BIM para Valorización de Obras", views: 1427, category: "BIM" },
-    { title: "Gestión del Agua en Minería", views: 1298, category: "Minería" },
-  ];
-  
-  const postsPerCategory = [
-    { name: "BIM", count: 8 },
-    { name: "Minería", count: 6 },
-    { name: "Seguridad", count: 5 },
-    { name: "Ingeniería", count: 4 },
-    { name: "Tendencias", count: 3 },
-  ];
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <h2 className="text-xl font-semibold">Análisis del Blog</h2>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
+            <p>Cargando estadísticas...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="space-y-6">
+        <h2 className="text-xl font-semibold">Análisis del Blog</h2>
+        <div className="text-center py-8">
+          <p>No se pudieron cargar las estadísticas</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold">Análisis del Blog</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold">Análisis del Blog</h2>
+        <div className="text-sm text-muted-foreground">
+          Actualizado en tiempo real
+        </div>
+      </div>
       
-      <Tabs defaultValue="views" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="views">Visitas</TabsTrigger>
+      <Tabs defaultValue="overview" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="overview">Resumen</TabsTrigger>
+          <TabsTrigger value="comments">Comentarios</TabsTrigger>
           <TabsTrigger value="posts">Artículos</TabsTrigger>
-          <TabsTrigger value="categories">Categorías</TabsTrigger>
+          <TabsTrigger value="engagement">Engagement</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="views" className="space-y-4">
-          <StatsChart 
-            title="Visitas del Blog (Últimos 6 meses)" 
-            data={viewsData} 
-            dataKey={["views", "visitors"]} 
-            nameKey="month" 
-            colors={["#4f46e5", "#06b6d4"]}
-          />
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Tráfico por Fuente</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-4">
-                  <li className="flex justify-between">
-                    <span className="text-sm">Google</span>
-                    <span className="font-medium">68%</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span className="text-sm">Redes sociales</span>
-                    <span className="font-medium">21%</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span className="text-sm">Directo</span>
-                    <span className="font-medium">8%</span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span className="text-sm">Email</span>
-                    <span className="font-medium">3%</span>
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Tiempo de Lectura</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between">
-                    <span className="text-sm">Tiempo promedio</span>
-                    <span className="font-medium">3:45 min</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm">% lectura completa</span>
-                    <span className="font-medium">62%</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+        <TabsContent value="overview" className="space-y-6">
+          {/* Overview Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <MetricCard
+              title="Total Comentarios"
+              value={data.commentStats.total}
+              description="Todos los comentarios recibidos"
+              icon={MessageSquare}
+              iconColor="text-blue-600"
+            />
+            <MetricCard
+              title="Total Artículos"
+              value={data.postStats.totalPosts}
+              description="Artículos publicados"
+              icon={FileText}
+              iconColor="text-green-600"
+            />
+            <MetricCard
+              title="Engagement Total"
+              value={data.userEngagement.totalLikes}
+              description="Total de me gusta"
+              icon={ThumbsUp}
+              iconColor="text-red-600"
+            />
+            <MetricCard
+              title="Promedio Comments/Post"
+              value={data.userEngagement.avgCommentsPerPost}
+              description="Engagement promedio"
+              icon={TrendingUp}
+              iconColor="text-purple-600"
+            />
+          </div>
+
+          {/* Charts */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <EngagementChart
+              data={data.userEngagement.engagementTrend}
+              title="Tendencia de Engagement (6 meses)"
+            />
+            <StatsChart
+              title="Artículos por Categoría"
+              data={data.postStats.postsByCategory}
+              dataKey="count"
+              nameKey="category"
+              colors={["#4f46e5"]}
+            />
+          </div>
+
+          {/* Top Lists */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <TopItemsList
+              title="Usuarios Más Activos"
+              items={data.userEngagement.mostActiveUsers}
+              maxItems={5}
+            />
+            <TopItemsList
+              title="Tags Más Populares"
+              items={data.postStats.popularTags}
+              maxItems={5}
+            />
           </div>
         </TabsContent>
         
-        <TabsContent value="posts" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Artículos más populares</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-3">
-                {popularPosts.map((post, index) => (
-                  <li key={index} className="flex justify-between items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">
-                    <div>
-                      <p className="font-medium text-sm">{post.title}</p>
-                      <p className="text-xs text-gray-500">{post.category}</p>
-                    </div>
-                    <div className="bg-primary/10 text-primary text-xs px-2 py-1 rounded">
-                      {post.views.toLocaleString()} visitas
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-          
-          <StatsChart 
-            title="Popularidad de Artículos" 
-            data={popularPosts} 
-            dataKey="views" 
-            nameKey="title"
-          />
+        <TabsContent value="comments" className="space-y-6">
+          {/* Comment Status Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <MetricCard
+              title="Total"
+              value={data.commentStats.total}
+              description="Todos los comentarios"
+              icon={MessageSquare}
+              iconColor="text-blue-600"
+            />
+            <MetricCard
+              title="Pendientes"
+              value={data.commentStats.pending}
+              description="Esperando moderación"
+              icon={Clock}
+              iconColor="text-yellow-600"
+            />
+            <MetricCard
+              title="Aprobados"
+              value={data.commentStats.approved}
+              description="Comentarios publicados"
+              icon={CheckCircle}
+              iconColor="text-green-600"
+            />
+            <MetricCard
+              title="Rechazados"
+              value={data.commentStats.rejected}
+              description="Comentarios rechazados"
+              icon={XCircle}
+              iconColor="text-red-600"
+            />
+          </div>
+
+          {/* Comment Charts */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <StatsChart
+              title="Comentarios Diarios (Últimos 30 días)"
+              data={data.commentStats.dailyComments}
+              dataKey="count"
+              nameKey="date"
+              colors={["#06b6d4"]}
+            />
+            <TopItemsList
+              title="Artículos con Más Comentarios"
+              items={data.commentStats.commentsByPost}
+              maxItems={8}
+            />
+          </div>
         </TabsContent>
         
-        <TabsContent value="categories" className="space-y-4">
-          <StatsChart 
-            title="Artículos por Categoría" 
-            data={postsPerCategory} 
-            dataKey="count" 
-            nameKey="name"
-            colors={["#06b6d4"]}
+        <TabsContent value="posts" className="space-y-6">
+          {/* Post Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <MetricCard
+              title="Total Artículos"
+              value={data.postStats.totalPosts}
+              description="Artículos publicados"
+              icon={FileText}
+              iconColor="text-blue-600"
+            />
+            <MetricCard
+              title="Categorías Activas"
+              value={data.postStats.postsByCategory.filter(cat => cat.count > 0).length}
+              description="Categorías con contenido"
+              icon={BarChart3}
+              iconColor="text-green-600"
+            />
+            <MetricCard
+              title="Tags Únicos"
+              value={data.postStats.popularTags.length}
+              description="Etiquetas diferentes"
+              icon={Calendar}
+              iconColor="text-purple-600"
+            />
+          </div>
+
+          {/* Post Charts */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <StatsChart
+              title="Publicaciones por Mes (Último año)"
+              data={data.postStats.postsByMonth}
+              dataKey="count"
+              nameKey="month"
+              colors={["#4f46e5"]}
+            />
+            <StatsChart
+              title="Distribución por Categoría"
+              data={data.postStats.postsByCategory}
+              dataKey="count"
+              nameKey="category"
+              colors={["#06b6d4"]}
+            />
+          </div>
+
+          {/* Post Lists */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <TopItemsList
+              title="Tags Más Utilizados"
+              items={data.postStats.popularTags}
+              maxItems={10}
+            />
+            <TopItemsList
+              title="Categorías por Popularidad"
+              items={data.postStats.postsByCategory}
+              maxItems={10}
+            />
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="engagement" className="space-y-6">
+          {/* Engagement Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <MetricCard
+              title="Total Me Gusta"
+              value={data.userEngagement.totalLikes}
+              description="En todos los comentarios"
+              icon={ThumbsUp}
+              iconColor="text-red-600"
+            />
+            <MetricCard
+              title="Comentarios/Artículo"
+              value={data.userEngagement.avgCommentsPerPost}
+              description="Promedio de engagement"
+              icon={MessageSquare}
+              iconColor="text-blue-600"
+            />
+            <MetricCard
+              title="Usuarios Activos"
+              value={data.userEngagement.mostActiveUsers.length}
+              description="Usuarios que han comentado"
+              icon={Users}
+              iconColor="text-green-600"
+            />
+          </div>
+
+          {/* Engagement Charts */}
+          <EngagementChart
+            data={data.userEngagement.engagementTrend}
+            title="Evolución del Engagement"
           />
-          
-          <Card>
-            <CardHeader>
-              <CardTitle>Popularidad de Categorías</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {postsPerCategory.map((category, index) => (
-                  <div key={index} className="flex justify-between items-center">
-                    <span>{category.name}</span>
-                    <span className="font-medium">{category.count} artículos</span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+
+          {/* User Activity */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <TopItemsList
+              title="Usuarios Más Activos"
+              items={data.userEngagement.mostActiveUsers}
+              maxItems={10}
+            />
+            <TopItemsList
+              title="Artículos con Mayor Engagement"
+              items={data.commentStats.commentsByPost}
+              maxItems={8}
+            />
+          </div>
         </TabsContent>
       </Tabs>
     </div>
