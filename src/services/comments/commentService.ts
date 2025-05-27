@@ -14,13 +14,14 @@ export const useComments = (postId: string) => {
   const [authorEmail, setAuthorEmail] = useState("");
   const { toast } = useToast();
 
-  // Load comments from storage
+  // Load comments from storage - ONLY APPROVED COMMENTS
   const loadComments = useCallback(async () => {
     setLoading(true);
     try {
       // Simulate network delay
       await new Promise(resolve => setTimeout(resolve, 500));
       
+      // Get only approved comments for the blog display
       const storedComments = commentStorageService.getCommentsByPost(postId);
       
       // Convert stored comments to display format
@@ -79,7 +80,7 @@ export const useComments = (postId: string) => {
       const post = getPostById(postId);
       const postTitle = post?.title || "Artículo desconocido";
       
-      // Add comment to storage
+      // Add comment to storage with pending status
       const savedComment = commentStorageService.addComment({
         postId,
         postTitle,
@@ -102,8 +103,8 @@ export const useComments = (postId: string) => {
         description: "Tu comentario está pendiente de moderación y será publicado pronto",
       });
       
-      // Reload comments to show any approved ones
-      loadComments();
+      // Don't reload comments here since the new comment is pending approval
+      // The comment will only appear after admin approval
       
     } catch (error) {
       console.error("Error adding comment:", error);
@@ -147,5 +148,91 @@ export const useComments = (postId: string) => {
     loadComments,
     addComment,
     likeComment
+  };
+};
+
+// Hook for admin comment management
+export const useAdminComments = () => {
+  const [comments, setComments] = useState<StoredComment[]>([]);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+
+  // Load all comments for admin (all statuses)
+  const loadAdminComments = useCallback(async () => {
+    setLoading(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      const allComments = commentStorageService.getCommentsForAdmin();
+      setComments(allComments);
+    } catch (error) {
+      console.error("Error loading admin comments:", error);
+      toast({
+        title: "Error",
+        description: "No se pudieron cargar los comentarios",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [toast]);
+
+  // Approve comment
+  const approveComment = useCallback(async (commentId: string) => {
+    const success = commentStorageService.updateCommentStatus(commentId, "approved");
+    if (success) {
+      await loadAdminComments(); // Reload admin comments
+      
+      // Trigger a custom event to notify blog components
+      window.dispatchEvent(new CustomEvent('commentApproved', { detail: { commentId } }));
+      
+      toast({
+        title: "Comentario aprobado",
+        description: "El comentario ha sido aprobado y ahora es visible en el blog",
+      });
+    }
+  }, [loadAdminComments, toast]);
+
+  // Reject comment
+  const rejectComment = useCallback(async (commentId: string) => {
+    const success = commentStorageService.updateCommentStatus(commentId, "rejected");
+    if (success) {
+      await loadAdminComments(); // Reload admin comments
+      
+      toast({
+        title: "Comentario rechazado",
+        description: "El comentario ha sido rechazado",
+      });
+    }
+  }, [loadAdminComments, toast]);
+
+  // Delete comment
+  const deleteComment = useCallback(async (commentId: string) => {
+    const success = commentStorageService.deleteComment(commentId);
+    if (success) {
+      await loadAdminComments(); // Reload admin comments
+      
+      // Trigger a custom event to notify blog components
+      window.dispatchEvent(new CustomEvent('commentDeleted', { detail: { commentId } }));
+      
+      toast({
+        title: "Comentario eliminado",
+        description: "El comentario ha sido eliminado permanentemente",
+      });
+    }
+  }, [loadAdminComments, toast]);
+
+  // Get comment stats
+  const getStats = useCallback(() => {
+    return commentStorageService.getCommentStats();
+  }, []);
+
+  return {
+    comments,
+    loading,
+    loadAdminComments,
+    approveComment,
+    rejectComment,
+    deleteComment,
+    getStats
   };
 };

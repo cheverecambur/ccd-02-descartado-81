@@ -76,6 +76,25 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
     loadComments();
   }, [loadComments]);
 
+  // Listen for comment approval events from admin panel
+  useEffect(() => {
+    const handleCommentApproved = () => {
+      loadComments(); // Reload comments when one is approved
+    };
+
+    const handleCommentDeleted = () => {
+      loadComments(); // Reload comments when one is deleted
+    };
+
+    window.addEventListener('commentApproved', handleCommentApproved);
+    window.addEventListener('commentDeleted', handleCommentDeleted);
+
+    return () => {
+      window.removeEventListener('commentApproved', handleCommentApproved);
+      window.removeEventListener('commentDeleted', handleCommentDeleted);
+    };
+  }, [loadComments]);
+
   const handleAddComment = (e: React.FormEvent) => {
     e.preventDefault();
     addComment();
@@ -138,7 +157,7 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
         </form>
       </Card>
       
-      {/* Comments List */}
+      {/* Comments List - Only shows APPROVED comments */}
       {loading && comments.length === 0 ? (
         <div className="text-center py-8">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-mining-600 mb-4"></div>
@@ -155,7 +174,7 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
         </div>
       ) : (
         <div className="text-center py-12 bg-gray-50 dark:bg-gray-800/30 rounded-lg">
-          <p className="mb-2 text-gray-600 dark:text-gray-400">No hay comentarios aún</p>
+          <p className="mb-2 text-gray-600 dark:text-gray-400">No hay comentarios aprobados aún</p>
           <p className="text-sm">Sé el primero en comentar este artículo</p>
         </div>
       )}
