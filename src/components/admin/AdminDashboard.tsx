@@ -1,10 +1,10 @@
-
 import React from "react";
 import { FileText, MessageSquare, BarChart3, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import UserStatsSection from "./UserStatsSection";
+import { storageService } from "@/services/storage/localStorageService";
 
 interface StatsCardProps {
   title: string;
@@ -89,9 +89,8 @@ const AdminDashboard = () => {
             ) : (
               <div className="space-y-4">
                 {analyticsData && analyticsData.postStats.totalPosts > 0 ? (
-                  // Get recent posts from storage service
+                  // Obtener posts recientes directamente usando el import
                   (() => {
-                    const storageService = require("@/services/storage/localStorageService").storageService;
                     const recentPosts = storageService.getAllPosts().slice(0, 5);
                     return recentPosts.map((post: any) => (
                       <div key={post.id} className="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">
