@@ -7,7 +7,8 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ThumbsUp, Reply, Send } from "lucide-react";
-import { useComments, Comment as CommentType } from "@/services/comments/commentService";
+import { useComments } from "@/services/comments/commentService";
+import { Comment as CommentType } from "@/types/blog";
 
 interface CommentProps {
   comment: CommentType;
