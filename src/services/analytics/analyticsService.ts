@@ -1,4 +1,3 @@
-
 import { StoredComment } from "@/services/comments/commentStorageService";
 import { BlogPost } from "@/types/blog";
 import { storageService } from "@/services/storage/localStorageService";
@@ -12,13 +11,13 @@ export interface AnalyticsData {
     approved: number;
     rejected: number;
     dailyComments: { date: string; count: number }[];
-    commentsByPost: { postTitle: string; count: number }[];
+    commentsByPost: { name: string; count: number }[];
   };
   
   // Post Analytics
   postStats: {
     totalPosts: number;
-    postsByCategory: { category: string; count: number }[];
+    postsByCategory: { name: string; count: number }[];
     postsByMonth: { month: string; count: number }[];
     popularTags: { name: string; count: number }[];
   };
@@ -27,7 +26,7 @@ export interface AnalyticsData {
   userEngagement: {
     totalLikes: number;
     avgCommentsPerPost: number;
-    mostActiveUsers: { name: string; comments: number }[];
+    mostActiveUsers: { name: string; count: number }[];
     engagementTrend: { period: string; comments: number; likes: number }[];
   };
 }
@@ -63,7 +62,7 @@ class AnalyticsService {
     
     // Posts by category
     const postsByCategory = categories.map(cat => ({
-      category: cat.name,
+      name: cat.name,
       count: posts.filter(post => post.category === cat.id).length
     })).filter(item => item.count > 0);
     
@@ -129,13 +128,13 @@ class AnalyticsService {
     return last30Days;
   }
   
-  private getCommentsByPost(comments: StoredComment[], posts: BlogPost[]): { postTitle: string; count: number }[] {
-    const postCommentCounts = new Map<string, { title: string; count: number }>();
+  private getCommentsByPost(comments: StoredComment[], posts: BlogPost[]): { name: string; count: number }[] {
+    const postCommentCounts = new Map<string, { name: string; count: number }>();
     
     comments.forEach(comment => {
       const post = posts.find(p => p.id.toString() === comment.postId);
       if (post) {
-        const existing = postCommentCounts.get(comment.postId) || { title: post.title, count: 0 };
+        const existing = postCommentCounts.get(comment.postId) || { name: post.title, count: 0 };
         postCommentCounts.set(comment.postId, { ...existing, count: existing.count + 1 });
       }
     });
@@ -199,7 +198,7 @@ class AnalyticsService {
       .slice(0, 10);
   }
   
-  private getMostActiveUsers(comments: StoredComment[]): { name: string; comments: number }[] {
+  private getMostActiveUsers(comments: StoredComment[]): { name: string; count: number }[] {
     const userCounts = new Map<string, number>();
     
     comments.forEach(comment => {
@@ -207,8 +206,8 @@ class AnalyticsService {
     });
     
     return Array.from(userCounts.entries())
-      .map(([name, comments]) => ({ name, comments }))
-      .sort((a, b) => b.comments - a.comments)
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count)
       .slice(0, 10);
   }
   
