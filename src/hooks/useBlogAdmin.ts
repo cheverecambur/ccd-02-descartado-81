@@ -1,8 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { BlogPost, CategoryInfo } from "@/types/blog";
-import { getAllPosts, getPostById } from "@/services/posts/blogPostsService";
-import { categories, popularTags } from "@/services/posts/categoriesService";
+import { storageService } from "@/services/storage/localStorageService";
 import { useToast } from "@/hooks/use-toast";
 
 interface AdminStats {
@@ -21,172 +20,105 @@ export const useBlogAdmin = () => {
     recentPosts: []
   });
   const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
+  const [categories, setCategories] = useState<CategoryInfo[]>([]);
   const { toast } = useToast();
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      setIsLoading(true);
-      try {
-        const posts = getAllPosts();
-        setAllPosts(posts);
-        
-        // Count posts per category
-        const categoryPostCounts: { [key: string]: number } = {};
-        categories.forEach(cat => {
-          categoryPostCounts[cat.id] = posts.filter(post => post.category === cat.id).length;
-        });
-        
-        // Get top 5 tags
-        const tagCounts: { [key: string]: number } = {};
-        posts.forEach(post => {
-          if (post.tags) {
-            post.tags.forEach(tag => {
-              tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-            });
-          }
-        });
-        
-        const topTags = Object.entries(tagCounts)
-          .map(([name, count]) => ({ name, count }))
-          .sort((a, b) => b.count - a.count)
-          .slice(0, 5);
-        
-        // Get 5 most recent posts
-        const recentPosts = [...posts]
-          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-          .slice(0, 5);
-        
-        setStats({
-          totalPosts: posts.length,
-          postsPerCategory: categoryPostCounts,
-          topTags,
-          recentPosts
-        });
-      } catch (error) {
-        console.error("Error fetching admin stats:", error);
-        toast({
-          title: "Error",
-          description: "No se pudieron cargar las estadísticas del blog",
-          variant: "destructive"
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const refreshStats = () => {
+    setIsLoading(true);
+    try {
+      const posts = storageService.getAllPosts();
+      const categoriesData = storageService.getAllCategories();
+      const statsData = storageService.getPostsStats();
+      
+      setAllPosts(posts);
+      setCategories(categoriesData);
+      setStats(statsData);
+    } catch (error) {
+      console.error("Error fetching admin stats:", error);
+      toast({
+        title: "Error",
+        description: "No se pudieron cargar las estadísticas del blog",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    fetchStats();
+  useEffect(() => {
+    refreshStats();
   }, [toast]);
 
   const savePost = async (post: BlogPost): Promise<BlogPost> => {
-    // This would connect to a real backend API in a production app
-    // For now, we're using a mock implementation that simulates saving
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log("Saving post:", post);
-        
-        // If this is a new post or edited post, update our local state
-        setAllPosts(prev => {
-          const index = prev.findIndex(p => p.id === post.id);
-          if (index >= 0) {
-            // Update existing post
-            const updatedPosts = [...prev];
-            updatedPosts[index] = post;
-            return updatedPosts;
-          } else {
-            // Add new post
-            return [...prev, post];
-          }
-        });
-        
-        resolve(post);
-      }, 800);
-    });
+    try {
+      const savedPost = await storageService.savePost(post);
+      refreshStats(); // Refresh data after saving
+      toast({
+        title: "Artículo guardado",
+        description: "El artículo ha sido guardado exitosamente."
+      });
+      return savedPost;
+    } catch (error) {
+      console.error("Error saving post:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo guardar el artículo",
+        variant: "destructive"
+      });
+      throw error;
+    }
   };
 
   const deletePost = async (postId: string): Promise<boolean> => {
-    // This would connect to a real backend API in a production app
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log("Deleting post:", postId);
-        
-        // Update our local state to remove the post
-        setAllPosts(prev => prev.filter(post => post.id.toString() !== postId));
-        
-        resolve(true);
-      }, 800);
-    });
+    try {
+      const success = await storageService.deletePost(postId);
+      if (success) {
+        refreshStats(); // Refresh data after deletion
+        toast({
+          title: "Artículo eliminado",
+          description: "El artículo ha sido eliminado exitosamente."
+        });
+      }
+      return success;
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo eliminar el artículo",
+        variant: "destructive"
+      });
+      return false;
+    }
   };
 
   const updateCategory = async (category: CategoryInfo): Promise<CategoryInfo> => {
-    // This would connect to a real backend API in a production app
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log("Updating category:", category);
-        resolve(category);
-      }, 800);
-    });
+    try {
+      const savedCategory = await storageService.saveCategory(category);
+      refreshStats(); // Refresh data after updating
+      toast({
+        title: "Categoría guardada",
+        description: "La categoría ha sido guardada exitosamente."
+      });
+      return savedCategory;
+    } catch (error) {
+      console.error("Error updating category:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo guardar la categoría",
+        variant: "destructive"
+      });
+      throw error;
+    }
   };
 
   return {
     isLoading,
     stats,
     allPosts,
+    categories,
     savePost,
     deletePost,
     updateCategory,
-    categories,
-    popularTags,
-    refreshStats: () => {
-      const fetchStats = async () => {
-        setIsLoading(true);
-        try {
-          const posts = getAllPosts();
-          
-          // Count posts per category
-          const categoryPostCounts: { [key: string]: number } = {};
-          categories.forEach(cat => {
-            categoryPostCounts[cat.id] = posts.filter(post => post.category === cat.id).length;
-          });
-          
-          // Get top 5 tags
-          const tagCounts: { [key: string]: number } = {};
-          posts.forEach(post => {
-            if (post.tags) {
-              post.tags.forEach(tag => {
-                tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-              });
-            }
-          });
-          
-          const topTags = Object.entries(tagCounts)
-            .map(([name, count]) => ({ name, count }))
-            .sort((a, b) => b.count - a.count)
-            .slice(0, 5);
-          
-          // Get 5 most recent posts
-          const recentPosts = [...posts]
-            .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-            .slice(0, 5);
-          
-          setStats({
-            totalPosts: posts.length,
-            postsPerCategory: categoryPostCounts,
-            topTags,
-            recentPosts
-          });
-        } catch (error) {
-          console.error("Error fetching admin stats:", error);
-          toast({
-            title: "Error",
-            description: "No se pudieron cargar las estadísticas del blog",
-            variant: "destructive"
-          });
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      
-      fetchStats();
-    }
+    refreshStats
   };
 };

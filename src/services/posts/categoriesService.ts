@@ -1,26 +1,32 @@
 
 import { CategoryInfo, TagInfo } from "@/types/blog";
+import { storageService } from "../storage/localStorageService";
 
-// Categories available
-export const categories: CategoryInfo[] = [
-  { id: "all", name: "Todos los artículos", count: 20 },
-  { id: "tendencias", name: "Tendencias del Sector", count: 6 },
-  { id: "mejores-practicas", name: "Mejores Prácticas", count: 9 },
-  { id: "investigacion", name: "Investigación y Desarrollo", count: 4 },
-  { id: "tecnologia", name: "Tecnología BIM", count: 4 }
+// Get categories from storage or use defaults
+export const getCategories = (): CategoryInfo[] => {
+  return storageService.getAllCategories();
+};
+
+// Default categories for initialization
+export const defaultCategories: CategoryInfo[] = [
+  { id: "all", name: "Todas las Categorías", count: 0 },
+  { id: "tendencias", name: "Tendencias", count: 0 },
+  { id: "tecnologia", name: "Tecnología", count: 0 },
+  { id: "seguridad", name: "Seguridad", count: 0 },
+  { id: "sostenibilidad", name: "Sostenibilidad", count: 0 },
+  { id: "normativas", name: "Normativas", count: 0 },
+  { id: "capacitacion", name: "Capacitación", count: 0 }
 ];
 
-// Popular tags for the sidebar
+// Popular tags - these could also be dynamic from storage
 export const popularTags: TagInfo[] = [
-  { name: "Minería Sostenible", count: 12 },
-  { name: "Tecnología", count: 18 },
-  { name: "Seguridad", count: 16 },
-  { name: "Innovación", count: 14 },
-  { name: "Medio Ambiente", count: 11 },
-  { name: "Automatización", count: 9 },
-  { name: "Perforación", count: 7 },
-  { name: "Big Data", count: 6 },
-  { name: "BIM", count: 6 },
-  { name: "Valorización", count: 4 },
-  { name: "SSOMA", count: 5 }
+  { name: "BIM", count: 15 },
+  { name: "Seguridad Minera", count: 12 },
+  { name: "SSOMA", count: 10 },
+  { name: "Sostenibilidad", count: 8 },
+  { name: "Ingeniería", count: 7 },
+  { name: "Construcción", count: 6 }
 ];
+
+// Export categories with dynamic data
+export const categories = getCategories().length > 0 ? getCategories() : defaultCategories;

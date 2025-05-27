@@ -14,11 +14,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { toast } from "@/hooks/use-toast";
 import { BlogPost } from "@/types/blog";
-import { getAllPosts } from "@/services/posts/blogPostsService";
 import { useBlogAdmin } from "@/hooks/useBlogAdmin";
-import { categories } from "@/services/posts/categoriesService";
 
 interface PostsManagerProps {
   onEditPost: (postId: string) => void;
@@ -26,41 +23,23 @@ interface PostsManagerProps {
 }
 
 const PostsManager = ({ onEditPost, onCreatePost }: PostsManagerProps) => {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPosts, setSelectedPosts] = useState<string[]>([]);
   
-  const { deletePost } = useBlogAdmin();
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const allPosts = getAllPosts();
-        setPosts(allPosts);
-        setFilteredPosts(allPosts);
-      } catch (error) {
-        console.error("Error fetching posts", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    fetchPosts();
-  }, []);
+  const { allPosts, categories, deletePost, isLoading } = useBlogAdmin();
 
   useEffect(() => {
     if (searchTerm) {
-      const filtered = posts.filter(post => 
+      const filtered = allPosts.filter(post => 
         post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         post.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredPosts(filtered);
     } else {
-      setFilteredPosts(posts);
+      setFilteredPosts(allPosts);
     }
-  }, [searchTerm, posts]);
+  }, [searchTerm, allPosts]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -83,20 +62,9 @@ const PostsManager = ({ onEditPost, onCreatePost }: PostsManagerProps) => {
   };
 
   const handleDeletePost = async (postId: string) => {
-    try {
+    if (window.confirm('¿Estás seguro de que quieres eliminar este artículo?')) {
       await deletePost(postId);
-      setPosts(posts.filter(post => post.id.toString() !== postId));
-      toast({
-        title: "Artículo eliminado",
-        description: "El artículo ha sido eliminado exitosamente."
-      });
-    } catch (error) {
-      console.error("Error deleting post", error);
-      toast({
-        title: "Error",
-        description: "No se pudo eliminar el artículo.",
-        variant: "destructive"
-      });
+      setSelectedPosts(prev => prev.filter(id => id !== postId));
     }
   };
 

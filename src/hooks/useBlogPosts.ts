@@ -3,21 +3,31 @@ import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useSearch } from "@/services/search/searchService";
 import { BlogPost } from "@/types/blog";
-import { getAllPosts } from "@/services/posts/blogPostsService";
-import { featuredPosts } from "@/services/posts/blogPostsData";
+import { getAllPosts, getPostsByCategory } from "@/services/posts/blogPostsService";
 
 export const useBlogPosts = (initialCategory: string = "all", postsPerPage: number = 6) => {
   const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [currentPage, setCurrentPage] = useState(1);
+  const [allPosts, setAllPosts] = useState<BlogPost[]>([]);
   const { searchTerm, setSearchTerm, searchResults, isSearching, performSearch } = useSearch();
   const { toast } = useToast();
 
-  // Get posts for active category
+  // Load posts when component mounts or category changes
+  useEffect(() => {
+    const loadPosts = () => {
+      const posts = activeCategory === "all" 
+        ? getAllPosts() 
+        : getPostsByCategory(activeCategory);
+      setAllPosts(posts);
+    };
+    
+    loadPosts();
+  }, [activeCategory]);
+
+  // Get filtered posts (search results or category filtered)
   const filteredPosts = searchResults.length > 0 
     ? searchResults 
-    : getAllPosts().filter(post => 
-        activeCategory === "all" ? true : post.category === activeCategory
-      );
+    : allPosts;
   
   // Calculate pagination
   const indexOfLastPost = currentPage * postsPerPage;
@@ -25,14 +35,16 @@ export const useBlogPosts = (initialCategory: string = "all", postsPerPage: numb
   const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
 
-  // Reset page when changing category
+  // Get featured posts (first 3 posts)
+  const featuredPosts = allPosts.slice(0, 3);
+
+  // Reset page when changing category or searching
   useEffect(() => {
     setCurrentPage(1);
-  }, [activeCategory]);
+  }, [activeCategory, searchTerm]);
 
   // Handle search
   const handleSearch = (query: string) => {
-    setSearchTerm(query);
     performSearch(query);
   };
 

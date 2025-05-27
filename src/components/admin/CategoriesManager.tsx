@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Edit, Plus, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
 import { CategoryInfo } from "@/types/blog";
 import { useBlogAdmin } from "@/hooks/useBlogAdmin";
 import {
@@ -37,7 +36,6 @@ type CategoryFormValues = z.infer<typeof formSchema>;
 
 const CategoriesManager = () => {
   const { categories, updateCategory } = useBlogAdmin();
-  const { toast } = useToast();
   const [selectedCategory, setSelectedCategory] = useState<CategoryInfo | null>(null);
   const [open, setOpen] = useState(false);
 
@@ -50,7 +48,6 @@ const CategoriesManager = () => {
     },
   });
 
-  // Open the dialog to edit a category
   const handleEditCategory = (category: CategoryInfo) => {
     setSelectedCategory(category);
     form.reset({
@@ -61,7 +58,6 @@ const CategoriesManager = () => {
     setOpen(true);
   };
 
-  // Open the dialog to create a new category
   const handleNewCategory = () => {
     setSelectedCategory(null);
     form.reset({
@@ -74,7 +70,6 @@ const CategoriesManager = () => {
 
   const onSubmit = async (values: CategoryFormValues) => {
     try {
-      // Ensure values has all required properties of CategoryInfo
       const categoryToSave: CategoryInfo = {
         id: values.id,
         name: values.name,
@@ -82,18 +77,9 @@ const CategoriesManager = () => {
       };
       
       await updateCategory(categoryToSave);
-      toast({
-        title: selectedCategory ? "Categoría actualizada" : "Categoría creada",
-        description: `La categoría ha sido ${selectedCategory ? "actualizada" : "creada"} exitosamente.`,
-      });
       setOpen(false);
     } catch (error) {
       console.error("Error saving category", error);
-      toast({
-        title: "Error",
-        description: "No se pudo guardar la categoría.",
-        variant: "destructive",
-      });
     }
   };
 
@@ -207,12 +193,6 @@ const CategoriesManager = () => {
                         variant="ghost" 
                         size="icon"
                         disabled={category.id === "all"}
-                        onClick={() => {
-                          toast({
-                            title: "Acción no implementada",
-                            description: "La eliminación de categorías estará disponible próximamente.",
-                          });
-                        }}
                       >
                         <Trash size={16} />
                       </Button>
