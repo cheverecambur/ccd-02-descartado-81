@@ -1,57 +1,56 @@
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Comment } from "@/types/blog";
+import { commentStorageService, StoredComment } from "./commentStorageService";
+import { getPostById } from "@/services/posts/blogPostsService";
 
 // Hook for managing comments
 export const useComments = (postId: string) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(false);
   const [newComment, setNewComment] = useState("");
+  const [authorName, setAuthorName] = useState("");
+  const [authorEmail, setAuthorEmail] = useState("");
   const { toast } = useToast();
 
-  // Load comments
-  const loadComments = async () => {
+  // Load comments from storage
+  const loadComments = useCallback(async () => {
     setLoading(true);
-    // Simulate API call with a delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    // Mock comments data
-    const mockComments: Comment[] = [
-      {
-        id: "c1",
-        postId,
-        authorName: "Juan Pérez",
-        authorAvatar: "https://randomuser.me/api/portraits/men/1.jpg",
-        content: "Excelente artículo, muy informativo. Me gustaría ver más contenido sobre tecnologías específicas para la minería subterránea.",
-        date: "8 May, 2025",
-        likes: 4,
-        replies: [
-          {
-            id: "r1c1",
-            postId,
-            authorName: "María González",
-            authorAvatar: "https://randomuser.me/api/portraits/women/44.jpg",
-            content: "Gracias por tu comentario, Juan. Estamos preparando un artículo específico sobre ese tema que publicaremos próximamente.",
-            date: "9 May, 2025",
-            likes: 2
-          }
-        ]
-      },
-      {
-        id: "c2",
-        postId,
-        authorName: "Ana Silva",
-        authorAvatar: "https://randomuser.me/api/portraits/women/2.jpg",
-        content: "¿Hay algún curso que profundice en estos temas? Me interesa especialmente la parte de optimización energética.",
-        date: "7 May, 2025",
-        likes: 1
-      }
-    ];
-    
-    setComments(mockComments);
-    setLoading(false);
-  };
+    try {
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      const storedComments = commentStorageService.getCommentsByPost(postId);
+      
+      // Convert stored comments to display format
+      const displayComments: Comment[] = storedComments.map(comment => ({
+        id: comment.id,
+        postId: comment.postId,
+        authorName: comment.authorName,
+        authorAvatar: comment.authorAvatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${comment.authorName}`,
+        content: comment.content,
+        date: new Date(comment.createdAt).toLocaleDateString('es-ES', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        }),
+        likes: comment.likes,
+        replies: comment.replies || []
+      }));
+      
+      setComments(displayComments);
+    } catch (error) {
+      console.error("Error loading comments:", error);
+      toast({
+        title: "Error",
+        description: "No se pudieron cargar los comentarios",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [postId, toast]);
 
   // Add a new comment
   const addComment = async () => {
@@ -64,54 +63,87 @@ export const useComments = (postId: string) => {
       return;
     }
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    // Create new comment
-    const comment: Comment = {
-      id: `c${Date.now()}`,
-      postId,
-      authorName: "Usuario",
-      authorAvatar: "https://randomuser.me/api/portraits/lego/1.jpg",
-      content: newComment,
-      date: "Justo ahora",
-      likes: 0
-    };
-    
-    setComments(prev => [comment, ...prev]);
-    setNewComment("");
-    toast({
-      title: "Comentario publicado",
-      description: "Tu comentario ha sido publicado exitosamente",
-    });
+    if (!authorName.trim()) {
+      toast({
+        title: "Error", 
+        description: "Por favor ingresa tu nombre",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      setLoading(true);
+      
+      // Get post title
+      const post = getPostById(postId);
+      const postTitle = post?.title || "Artículo desconocido";
+      
+      // Add comment to storage
+      const savedComment = commentStorageService.addComment({
+        postId,
+        postTitle,
+        authorName: authorName.trim(),
+        authorEmail: authorEmail.trim(),
+        authorAvatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${authorName}`,
+        content: newComment.trim(),
+        date: new Date().toLocaleDateString('es-ES'),
+        likes: 0,
+        replies: []
+      });
+      
+      // Reset form
+      setNewComment("");
+      setAuthorName("");
+      setAuthorEmail("");
+      
+      toast({
+        title: "Comentario enviado",
+        description: "Tu comentario está pendiente de moderación y será publicado pronto",
+      });
+      
+      // Reload comments to show any approved ones
+      loadComments();
+      
+    } catch (error) {
+      console.error("Error adding comment:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo enviar el comentario",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Like a comment
-  const likeComment = (commentId: string) => {
-    setComments(prev => prev.map(c => {
-      if (c.id === commentId) {
-        return {...c, likes: c.likes + 1};
-      }
+  const likeComment = useCallback((commentId: string) => {
+    const success = commentStorageService.likeComment(commentId);
+    if (success) {
+      setComments(prev => prev.map(c => {
+        if (c.id === commentId) {
+          return {...c, likes: c.likes + 1};
+        }
+        return c;
+      }));
       
-      // Check if it's a reply
-      if (c.replies) {
-        return {
-          ...c,
-          replies: c.replies.map(r => 
-            r.id === commentId ? {...r, likes: r.likes + 1} : r
-          )
-        };
-      }
-      
-      return c;
-    }));
-  };
+      toast({
+        title: "¡Gracias!",
+        description: "Tu 'me gusta' ha sido registrado",
+      });
+    }
+  }, [toast]);
 
   return {
     comments,
     loading,
     newComment,
     setNewComment,
+    authorName,
+    setAuthorName,
+    authorEmail,
+    setAuthorEmail,
     loadComments,
     addComment,
     likeComment

@@ -4,8 +4,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { ThumbsUp, Reply, Send } from "lucide-react";
-import { useComments, Comment as CommentType } from "@/services/blogService";
+import { useComments, Comment as CommentType } from "@/services/comments/commentService";
 
 interface CommentProps {
   comment: CommentType;
@@ -59,6 +61,10 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
     comments,
     newComment,
     setNewComment,
+    authorName,
+    setAuthorName,
+    authorEmail,
+    setAuthorEmail,
     loading,
     loadComments,
     addComment,
@@ -67,7 +73,7 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
 
   useEffect(() => {
     loadComments();
-  }, [postId, loadComments]);
+  }, [loadComments]);
 
   const handleAddComment = (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,23 +87,53 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
       {/* New Comment Form */}
       <Card className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-lg mb-8 border-0 shadow">
         <h4 className="font-medium mb-4">Deja tu comentario</h4>
-        <form onSubmit={handleAddComment}>
+        <form onSubmit={handleAddComment} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="authorName">Nombre *</Label>
+              <Input
+                id="authorName"
+                placeholder="Tu nombre"
+                value={authorName}
+                onChange={(e) => setAuthorName(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="authorEmail">Email (opcional)</Label>
+              <Input
+                id="authorEmail"
+                type="email"
+                placeholder="tu@email.com"
+                value={authorEmail}
+                onChange={(e) => setAuthorEmail(e.target.value)}
+              />
+            </div>
+          </div>
+          
           <div className="relative">
+            <Label htmlFor="comment">Comentario *</Label>
             <textarea
+              id="comment"
               placeholder="Escribe tu comentario aquí..."
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-mining-500 dark:focus:ring-mining-400 focus:border-transparent h-32 resize-none pr-12"
+              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-mining-500 dark:focus:ring-mining-400 focus:border-transparent h-32 resize-none pr-12 mt-1"
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
+              required
             ></textarea>
             <Button 
               type="submit"
               size="icon"
               className="absolute bottom-2 right-2 bg-mining-600 hover:bg-mining-700"
-              disabled={loading || !newComment.trim()}
+              disabled={loading || !newComment.trim() || !authorName.trim()}
             >
               <Send className="h-4 w-4" />
             </Button>
           </div>
+          
+          <p className="text-xs text-gray-500">
+            Tu comentario será revisado antes de ser publicado.
+          </p>
         </form>
       </Card>
       
