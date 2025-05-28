@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,7 +52,8 @@ interface PostEditorProps {
 }
 
 const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
-  const [isLoading, setIsLoading] = useState(!!postId);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(!!postId);
   const { savePost } = useBlogAdmin();
   const { toast } = useToast();
   
@@ -78,12 +78,15 @@ const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
   // Load post data if editing existing post
   useEffect(() => {
     if (postId) {
-      setIsLoading(true);
+      setIsInitialLoading(true);
       try {
+        console.log("Loading post with ID:", postId);
         const post = getPostById(postId);
+        
         if (post) {
+          console.log("Post found:", post);
           const authorName = typeof post.author === "string" ? post.author : post.author.name;
-          const authorAvatar = typeof post.author === "string" ? "" : post.author.avatar;
+          const authorAvatar = typeof post.author === "string" ? "" : post.author.avatar || "";
           const authorBio = typeof post.author === "string" ? "" : post.author.bio || "";
           const authorPosition = typeof post.author === "string" ? "" : post.author.position || "";
           
@@ -97,9 +100,16 @@ const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
             readTime: post.readTime,
             tags: post.tags ? post.tags.join(", ") : "",
             author: authorName,
-            authorAvatar,
+            authorAvatar: authorAvatar || "https://randomuser.me/api/portraits/lego/1.jpg",
             authorBio,
             authorPosition
+          });
+        } else {
+          console.error("Post not found with ID:", postId);
+          toast({
+            title: "Error",
+            description: "No se encontró el artículo solicitado",
+            variant: "destructive"
           });
         }
       } catch (error) {
@@ -110,7 +120,7 @@ const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
           variant: "destructive"
         });
       } finally {
-        setIsLoading(false);
+        setIsInitialLoading(false);
       }
     }
   }, [postId, form, toast]);
@@ -118,7 +128,9 @@ const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
   const onSubmit = async (values: FormValues) => {
     setIsLoading(true);
     try {
-      // Create author object
+      console.log("Saving post with values:", values);
+      
+      // Create author object based on provided data
       const author = values.authorAvatar || values.authorBio || values.authorPosition
         ? {
             name: values.author,
@@ -139,26 +151,34 @@ const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
         date: values.date,
         readTime: values.readTime,
         comments: 0,
-        tags: values.tags.split(",").map(tag => tag.trim()),
+        tags: values.tags ? values.tags.split(",").map(tag => tag.trim()).filter(Boolean) : [],
       };
       
+      console.log("Post data to save:", postData);
       await savePost(postData);
-      toast({
-        title: postId ? "Artículo actualizado" : "Artículo creado",
-        description: `El artículo ha sido ${postId ? "actualizado" : "creado"} exitosamente.`
-      });
       onSaveSuccess();
     } catch (error) {
       console.error("Error saving post", error);
       toast({
         title: "Error",
-        description: "No se pudo guardar el artículo",
+        description: "No se pudo guardar el artículo. Intente nuevamente.",
         variant: "destructive"
       });
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (isInitialLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mining-600 mx-auto mb-4"></div>
+          <p>Cargando artículo...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Form {...form}>

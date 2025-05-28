@@ -1,8 +1,7 @@
 
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate, Routes, Route } from "react-router-dom";
+import { useLocation, useNavigate, Routes, Route, useParams } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { useBlogAdmin } from "@/hooks/useBlogAdmin";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
 import AdminDashboard from "@/components/admin/AdminDashboard";
@@ -17,17 +16,13 @@ const BlogAdmin = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [activeView, setActiveView] = useState<string>("dashboard");
-  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
   // Synchronize the active view with the URL path
   useEffect(() => {
     const path = location.pathname.replace("/blog-admin/", "");
     if (path.startsWith("edit-post/")) {
-      const postId = path.replace("edit-post/", "");
-      setSelectedPostId(postId);
       setActiveView("edit-post");
     } else if (path === "new-post") {
-      setSelectedPostId(null);
       setActiveView("edit-post");
     } else if (
       path === "posts" ||
@@ -49,56 +44,32 @@ const BlogAdmin = () => {
     } else {
       navigate(`/blog-admin/${view}`);
     }
-    if (view !== "edit-post") {
-      setSelectedPostId(null);
-    }
   };
 
   const handleEditPost = (postId: string) => {
-    setSelectedPostId(postId);
     navigate(`/blog-admin/edit-post/${postId}`);
   };
 
   const handleCreatePost = () => {
-    setSelectedPostId(null);
     navigate("/blog-admin/new-post");
   };
 
-  // No se pasan stats ni isLoading porque cada sección usa sus propios hooks
-  const renderActiveView = () => {
+  const getTitle = () => {
     switch (activeView) {
       case "dashboard":
-        return <AdminDashboard />;
+        return "Panel de Control";
       case "posts":
-        return (
-          <PostsManager
-            onEditPost={handleEditPost}
-            onCreatePost={handleCreatePost}
-          />
-        );
+        return "Administrar Artículos";
       case "edit-post":
-        return (
-          <PostEditor
-            postId={selectedPostId}
-            onSaveSuccess={() => {
-              toast({
-                title: selectedPostId ? "Post actualizado" : "Post creado",
-                description: `El artículo ha sido ${
-                  selectedPostId ? "actualizado" : "creado"
-                } exitosamente.`,
-              });
-              navigate("/blog-admin/posts");
-            }}
-          />
-        );
+        return location.pathname.includes("/new-post") ? "Crear Artículo" : "Editar Artículo";
       case "categories":
-        return <CategoriesManager />;
+        return "Administrar Categorías";
       case "comments":
-        return <CommentsManager />;
+        return "Administrar Comentarios";
       case "analytics":
-        return <AnalyticsSection />;
+        return "Análisis y Estadísticas";
       default:
-        return <AdminDashboard />;
+        return "Administración del Blog";
     }
   };
 
@@ -106,32 +77,11 @@ const BlogAdmin = () => {
     <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
       <AdminSidebar activeView={activeView} onViewChange={handleViewChange} />
       <div className="flex flex-col flex-1 overflow-hidden">
-        <AdminHeader
-          title={
-            activeView === "dashboard"
-              ? "Panel de Control"
-              : activeView === "posts"
-              ? "Administrar Artículos"
-              : activeView === "edit-post"
-              ? selectedPostId
-                ? "Editar Artículo"
-                : "Crear Artículo"
-              : activeView === "categories"
-              ? "Administrar Categorías"
-              : activeView === "comments"
-              ? "Administrar Comentarios"
-              : activeView === "analytics"
-              ? "Análisis y Estadísticas"
-              : "Administración del Blog"
-          }
-        />
+        <AdminHeader title={getTitle()} />
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
           <Routes>
             <Route path="/" element={<AdminDashboard />} />
-            <Route
-              path="dashboard"
-              element={<AdminDashboard />}
-            />
+            <Route path="dashboard" element={<AdminDashboard />} />
             <Route
               path="posts"
               element={
@@ -144,8 +94,8 @@ const BlogAdmin = () => {
             <Route
               path="new-post"
               element={
-                <PostEditor
-                  postId={null}
+                <PostEditorWrapper
+                  isNew={true}
                   onSaveSuccess={() => {
                     toast({
                       title: "Artículo creado",
@@ -159,8 +109,8 @@ const BlogAdmin = () => {
             <Route
               path="edit-post/:id"
               element={
-                <PostEditor
-                  postId={selectedPostId}
+                <PostEditorWrapper
+                  isNew={false}
                   onSaveSuccess={() => {
                     toast({
                       title: "Artículo actualizado",
@@ -179,6 +129,18 @@ const BlogAdmin = () => {
         </main>
       </div>
     </div>
+  );
+};
+
+// Wrapper component to handle postId from URL params
+const PostEditorWrapper = ({ isNew, onSaveSuccess }: { isNew: boolean; onSaveSuccess: () => void }) => {
+  const { id } = useParams<{ id: string }>();
+  
+  return (
+    <PostEditor
+      postId={isNew ? null : id || null}
+      onSaveSuccess={onSaveSuccess}
+    />
   );
 };
 
