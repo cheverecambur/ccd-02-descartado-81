@@ -4,7 +4,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import Sidebar from "@/components/layout/Sidebar";
 import { BlogSidebar } from "@/components/blog/BlogSidebar";
 import { CommentSection } from "@/components/blog/CommentSection";
 import { HeroSection } from "@/components/blog/HeroSection";
@@ -95,7 +94,6 @@ const BlogPostPage = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar toggleSidebar={toggleSidebar} />
       <div className="flex flex-1">
-        <Sidebar isOpen={sidebarOpen} />
         <main className="flex-1 bg-gray-50 dark:bg-gray-900">
           {/* Loading and Error States */}
           {loading || !post ? (
