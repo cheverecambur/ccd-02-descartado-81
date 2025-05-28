@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -186,7 +185,7 @@ const Index = () => {
             <Card className="overflow-hidden hover-card-effect border-0 shadow">
               <div className="h-48 overflow-hidden">
                 <img
-                  src="https://images.unsplash.com/photo-1579254646874-4c70634bf16e?auto=format&fit=crop&w=800&q=80"
+                  src="https://images.unsplash.com/photo-1579254646874-4c70605b060b?auto=format&fit=crop&w=800&q=80"
                   alt="Minería"
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                 />
