@@ -1,7 +1,5 @@
-
 import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
-import Sidebar from "@/components/layout/Sidebar";
 import Footer from "@/components/layout/Footer";
 import CourseCard, { CourseCardProps } from "@/components/dashboard/CourseCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -167,9 +165,7 @@ const LiveCourses = () => {
       <Navbar toggleSidebar={toggleSidebar} />
       
       <div className="flex flex-1">
-        <Sidebar isOpen={sidebarOpen} />
-        
-        <div className="flex-1 lg:ml-64 transition-all duration-200 ease-in-out">
+        <div className="flex-1 transition-all duration-200 ease-in-out">
           <main className="p-4 md:p-6 max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
               <div>
