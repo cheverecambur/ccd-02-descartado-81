@@ -17,7 +17,7 @@ export interface BlogPost {
     position?: string;
     publications?: number;
     linkedin?: string;
-  } | string;
+  };
   date: string;
   readTime: string;
   comments: number;

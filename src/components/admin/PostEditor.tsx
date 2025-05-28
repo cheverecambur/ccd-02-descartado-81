@@ -85,10 +85,6 @@ const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
         
         if (post) {
           console.log("Post found:", post);
-          const authorName = typeof post.author === "string" ? post.author : post.author.name;
-          const authorAvatar = typeof post.author === "string" ? "" : post.author.avatar || "";
-          const authorBio = typeof post.author === "string" ? "" : post.author.bio || "";
-          const authorPosition = typeof post.author === "string" ? "" : post.author.position || "";
           
           form.reset({
             title: post.title,
@@ -99,10 +95,10 @@ const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
             date: post.date,
             readTime: post.readTime,
             tags: post.tags ? post.tags.join(", ") : "",
-            author: authorName,
-            authorAvatar: authorAvatar || "https://randomuser.me/api/portraits/lego/1.jpg",
-            authorBio,
-            authorPosition
+            author: post.author.name,
+            authorAvatar: post.author.avatar || "https://randomuser.me/api/portraits/lego/1.jpg",
+            authorBio: post.author.bio || "",
+            authorPosition: post.author.position || ""
           });
         } else {
           console.error("Post not found with ID:", postId);
@@ -130,16 +126,6 @@ const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
     try {
       console.log("Saving post with values:", values);
       
-      // Create author object based on provided data
-      const author = values.authorAvatar || values.authorBio || values.authorPosition
-        ? {
-            name: values.author,
-            avatar: values.authorAvatar || "https://randomuser.me/api/portraits/lego/1.jpg",
-            bio: values.authorBio || undefined,
-            position: values.authorPosition || undefined
-          }
-        : values.author;
-
       const postData: BlogPost = {
         id: postId || `post-${Date.now()}`,
         title: values.title,
@@ -147,7 +133,12 @@ const PostEditor = ({ postId, onSaveSuccess }: PostEditorProps) => {
         content: values.content,
         category: values.category,
         image: values.image,
-        author: author,
+        author: {
+          name: values.author,
+          avatar: values.authorAvatar || "https://randomuser.me/api/portraits/lego/1.jpg",
+          bio: values.authorBio || undefined,
+          position: values.authorPosition || undefined
+        },
         date: values.date,
         readTime: values.readTime,
         comments: 0,

@@ -9,11 +9,6 @@ interface HeroSectionProps {
 }
 
 export const HeroSection = ({ post }: HeroSectionProps) => {
-  // Determine information about the author
-  const authorData = typeof post.author === 'object' 
-    ? post.author 
-    : { name: post.author as string, avatar: "" };
-    
   return (
     <div className="relative bg-gradient-to-r from-mining-700 to-engineering-800 text-white py-16">
       <div 
@@ -36,11 +31,11 @@ export const HeroSection = ({ post }: HeroSectionProps) => {
           </h1>
           <div className="flex items-center justify-center gap-4 mt-6">
             <Avatar className="h-10 w-10 border-2 border-white">
-              <AvatarImage src={authorData.avatar} alt={authorData.name} />
-              <AvatarFallback>{authorData.name.charAt(0)}</AvatarFallback>
+              <AvatarImage src={post.author.avatar} alt={post.author.name} />
+              <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col items-start text-sm">
-              <span className="font-medium">{authorData.name}</span>
+              <span className="font-medium">{post.author.name}</span>
               <div className="flex items-center gap-2 text-xs text-white/80">
                 <Calendar className="h-3 w-3" />
                 <span>{post.date}</span>

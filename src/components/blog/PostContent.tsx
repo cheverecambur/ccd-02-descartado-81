@@ -6,6 +6,7 @@ import {
   BookmarkPlus, Facebook, Linkedin, Share2, ThumbsUp, Twitter
 } from "lucide-react";
 import { BlogPost } from "@/types/blog";
+import { SafeHtmlContent } from "./SafeHtmlContent";
 
 interface PostContentProps {
   post: BlogPost;
@@ -26,16 +27,11 @@ export const PostContent = ({
   toggleBookmark,
   handleShare
 }: PostContentProps) => {
-  // Determine information about the author
-  const authorData = typeof post.author === 'object' 
-    ? post.author 
-    : { name: post.author as string, avatar: "" };
-
   return (
     <>
-      <div 
-        className="prose prose-lg dark:prose-invert max-w-none" 
-        dangerouslySetInnerHTML={{ __html: post.content || post.excerpt }}
+      <SafeHtmlContent 
+        content={post.content || post.excerpt}
+        className="prose prose-lg dark:prose-invert max-w-none"
       />
       
       {/* Related Courses Section */}
@@ -149,7 +145,7 @@ export const PostContent = ({
           </div>
         </div>
         
-        {typeof post.author === 'object' && post.author.bio && (
+        {post.author.bio && (
           <div className="mt-10">
             <h3 className="text-2xl font-bold mb-4">Sobre el autor</h3>
             <div className="flex items-center gap-4">
